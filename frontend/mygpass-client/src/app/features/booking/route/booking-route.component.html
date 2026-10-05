@@ -1,0 +1,90 @@
+<main class="journey-page">
+  <section class="journey-intro" aria-labelledby="journey-title">
+    <p class="eyebrow">Booking</p>
+    <h1 id="journey-title">Plan your journey</h1>
+    <p class="journey-help"><strong>Click</strong> a port on the schematic map to continue.</p>
+  </section>
+
+  @if (showTerminalFeeOptions()) {
+    <div class="terminal-fee-backdrop">
+      <div class="terminal-fee-window" role="dialog" aria-modal="true" aria-labelledby="terminal-fee-title">
+        <h2 id="terminal-fee-title">Select terminal fee</h2>
+        <div class="terminal-fee-options">
+          <button type="button" class="terminal-fee-option" (click)="selectPassengerTerminalFee()">
+            Passenger Terminal Fee
+          </button>
+          <button type="button" class="terminal-fee-option" disabled>
+            RORO Terminal Fee
+          </button>
+        </div>
+      </div>
+    </div>
+  }
+
+  <section class="origin-map-card" aria-label="Clickable schematic Philippine port map">
+    <div class="map-toolbar">
+      <div class="selection-step">Choose an Origin Port</div>
+    </div>
+
+    <div
+      #portMap
+      class="port-map geographic-map"
+      role="group"
+      aria-label="Schematic Philippine origin port locations"
+    >
+      <svg
+        class="philippines-svg"
+        viewBox="0 0 1024 1536"
+        preserveAspectRatio="xMidYMid meet"
+        role="img"
+        aria-label="Schematic outline map of the Philippines"
+      >
+        <g class="archipelago-schematic" aria-hidden="true">
+          <path d="M 470 115 L 530 150 L 565 235 L 625 292 L 598 365 L 620 435 L 585 505 L 645 570 L 680 645 L 720 700 L 677 750 L 625 710 L 590 650 L 555 575 L 510 520 L 492 455 L 450 408 L 430 320 L 448 235 Z" />
+          <path d="M 555 735 L 600 720 L 630 765 L 605 805 L 565 790 Z" />
+          <path d="M 350 820 L 382 790 L 400 850 L 386 935 L 360 1010 L 332 1080 L 300 1165 L 270 1245 L 235 1320 L 210 1395 L 180 1435 L 165 1400 L 190 1320 L 220 1245 L 250 1165 L 282 1080 L 310 1000 L 330 915 Z" />
+          <path d="M 645 845 L 690 830 L 720 860 L 700 895 L 660 890 Z" />
+          <path d="M 680 915 L 720 900 L 750 930 L 725 965 L 690 958 Z" />
+          <path d="M 745 875 L 770 865 L 785 900 L 765 925 Z" />
+          <path d="M 800 955 L 825 945 L 840 970 L 818 985 Z" />
+          <path d="M 605 1040 L 660 1010 L 735 1030 L 790 1015 L 855 1040 L 905 1090 L 890 1150 L 925 1205 L 895 1280 L 850 1320 L 830 1390 L 780 1420 L 735 1385 L 700 1320 L 645 1295 L 610 1235 L 570 1205 L 600 1150 L 575 1090 Z" />
+          <path d="M 445 1140 L 480 1125 L 510 1155 L 495 1190 L 460 1185 Z" />
+          <path d="M 485 1350 L 505 1340 L 520 1370 L 505 1390 Z" />
+          <path d="M 410 1430 L 430 1420 L 445 1440 L 425 1455 Z" />
+        </g>
+
+        @for (port of originPorts; track port.name) {
+          @if (portImagePositions[port.name]) {
+            <g
+              class="svg-port-marker"
+              [class.selected]="selectedOrigin() === port.name"
+              [attr.transform]="'translate(' + portImagePosition(port).x + ' ' + portImagePosition(port).y + ')'"
+              tabindex="0"
+              role="button"
+              [attr.aria-label]="'Select ' + port.name"
+              (click)="selectOrigin(port); $event.stopPropagation()"
+              (keydown.enter)="selectOrigin(port)"
+              (keydown.space)="$event.preventDefault(); selectOrigin(port)"
+            >
+                <title>{{ port.name }} Port</title>
+                <circle class="svg-port-hit-area" r="24"></circle>
+                <circle class="svg-port-dot" r="8"></circle>
+              <text
+                class="svg-port-label"
+                [class.svg-port-label-above]="port.name === 'Ozamiz' || port.name === 'Bohol'"
+                [class.svg-port-label-below]="port.name === 'Zamboanga'"
+                [attr.x]="port.name === 'Ozamiz' || port.name === 'Zamboanga' || port.name === 'Bohol' ? 0 : 12"
+                [attr.y]="port.name === 'Ozamiz' || port.name === 'Bohol' ? -18 : port.name === 'Zamboanga' ? 18 : 5"
+                [attr.text-anchor]="port.name === 'Ozamiz' || port.name === 'Zamboanga' || port.name === 'Bohol' ? 'middle' : null"
+              >{{ port.name }}</text>
+            </g>
+          }
+        }
+      </svg>
+    </div>
+
+    <div class="map-footer">
+      <span>Select a port of origin.</span>
+    </div>
+  </section>
+</main>

@@ -1,0 +1,8 @@
+@if (isAppReady()) {
+  <router-outlet />
+  <app-back-to-top />
+} @else {
+  <div class="app-loading" aria-live="polite" aria-busy="true">
+    <span class="loading-logo">MyGPASS</span>
+  </div>
+}

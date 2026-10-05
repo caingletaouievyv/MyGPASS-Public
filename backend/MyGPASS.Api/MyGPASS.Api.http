@@ -1,0 +1,11 @@
+@MyGPASS.Api_HostAddress = https://localhost:5001
+
+GET {{MyGPASS.Api_HostAddress}}/api/health
+Accept: application/json
+
+###
+
+GET {{MyGPASS.Api_HostAddress}}/api/ports
+Accept: application/json
+
+###

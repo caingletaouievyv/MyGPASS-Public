@@ -1,0 +1,62 @@
+<header class="site-header">
+  <div class="brand">
+    <a class="brand-mark" routerLink="/booking/route" aria-label="MyGPASS home">
+      <span class="brand-wordmark">MyGPASS</span>
+    </a>
+  </div>
+
+  <nav class="header-nav" aria-label="Primary navigation">
+    @if (isAuthenticated() || isGuestSession()) {
+    <a
+      routerLink="/booking/route"
+      [class.active]="isActive('/booking/route')"
+      class="nav-link nav-home">
+      Home
+    </a>
+    }
+    @if (isAuthenticated()) {
+    <a
+      routerLink="/account"
+      [class.active]="isActive('/account')"
+      class="nav-link nav-account"
+      aria-current="page">
+      Account
+    </a>
+    <a
+      routerLink="/history"
+      [class.active]="isActive('/history')"
+      class="nav-link nav-history"
+      aria-current="page">
+      History
+    </a>
+    @if (authService.isAdministrator()) {
+      <a
+        routerLink="/admin/users"
+        [class.active]="isActive('/admin/users')"
+        class="nav-link nav-admin">
+        Admin
+      </a>
+      <a
+        routerLink="/admin/schedules"
+        [class.active]="isActive('/admin/schedules')"
+        class="nav-link nav-admin">
+        Schedules
+      </a>
+    }
+    <button
+      type="button"
+      class="nav-logout"
+      (click)="logout()"
+      aria-label="Logout from GPASS">
+      Logout
+    </button>
+    } @else if (isGuestSession()) {
+    <a
+      routerLink="/login"
+      class="nav-logout"
+      aria-label="Login to GPASS">
+      Login
+    </a>
+    }
+  </nav>
+</header>

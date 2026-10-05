@@ -1,0 +1,263 @@
+<main class="auth-page">
+  <section class="auth-card" aria-label="Registration form">
+    <header class="brand-block">
+      <div class="brand-mark" aria-label="GPASS branding">
+        <span class="brand-wordmark">MyGPASS</span>
+      </div>
+    </header>
+
+    <div class="auth-header">
+      <h1>Create Account</h1>
+    </div>
+
+    <div class="error-message" *ngIf="errorMessage()" role="alert" aria-live="polite">{{ errorMessage() }}</div>
+
+    <form [formGroup]="registrationForm" (ngSubmit)="onSubmit()" novalidate>
+      <div class="name-row">
+        <div class="field-group">
+          <label for="register-first-name">First Name</label>
+          <input
+            id="register-first-name"
+            type="text"
+            formControlName="firstName"
+            autocomplete="given-name"
+            placeholder="Enter first name"
+            [attr.aria-invalid]="firstNameControl.invalid && (firstNameControl.touched || firstNameControl.dirty)"
+            [class.input-error]="firstNameControl.invalid && (firstNameControl.touched || firstNameControl.dirty)"
+          />
+          <div
+            class="error-message"
+            *ngIf="firstNameControl.hasError('required') && (firstNameControl.touched || firstNameControl.dirty)"
+            aria-live="polite"
+          >
+            First name is required.
+          </div>
+        </div>
+
+        <div class="field-group">
+          <label for="register-last-name">Last Name</label>
+          <input
+            id="register-last-name"
+            type="text"
+            formControlName="lastName"
+            autocomplete="family-name"
+            placeholder="Enter last name"
+            [attr.aria-invalid]="lastNameControl.invalid && (lastNameControl.touched || lastNameControl.dirty)"
+            [class.input-error]="lastNameControl.invalid && (lastNameControl.touched || lastNameControl.dirty)"
+          />
+          <div
+            class="error-message"
+            *ngIf="lastNameControl.hasError('required') && (lastNameControl.touched || lastNameControl.dirty)"
+            aria-live="polite"
+          >
+            Last name is required.
+          </div>
+        </div>
+      </div>
+
+      <div class="field-group">
+        <label for="register-mobile-number">Mobile Number</label>
+        <input
+          id="register-mobile-number"
+          type="tel"
+          formControlName="mobileNumber"
+          autocomplete="tel"
+          inputmode="numeric"
+          placeholder="Enter mobile number"
+          [attr.aria-invalid]="mobileNumberControl.invalid && (mobileNumberControl.touched || mobileNumberControl.dirty)"
+          [class.input-error]="mobileNumberControl.invalid && (mobileNumberControl.touched || mobileNumberControl.dirty)"
+        />
+
+        <div
+          class="error-message"
+          *ngIf="mobileNumberControl.hasError('required') && (mobileNumberControl.touched || mobileNumberControl.dirty)"
+          aria-live="polite"
+        >
+          Mobile number is required.
+        </div>
+          <div
+            class="error-message"
+            *ngIf="mobileNumberControl.hasError('invalidMobileNumber') && (mobileNumberControl.touched || mobileNumberControl.dirty)"
+            aria-live="polite"
+          >
+            Enter a valid Philippine mobile number (09XXXXXXXXX).
+          </div>
+      </div>
+
+      <div class="field-group">
+        <label for="register-email">Email Address</label>
+        <input
+          id="register-email"
+          type="email"
+          formControlName="email"
+          autocomplete="email"
+          placeholder="Enter your email address"
+          [attr.aria-invalid]="emailControl.invalid && (emailControl.touched || emailControl.dirty)"
+          [class.input-error]="emailControl.invalid && (emailControl.touched || emailControl.dirty)"
+        />
+
+        <div
+          class="error-message"
+          *ngIf="emailControl.hasError('required') && (emailControl.touched || emailControl.dirty)"
+          aria-live="polite"
+        >
+          Email address is required.
+        </div>
+        <div
+          class="error-message"
+          *ngIf="emailControl.hasError('email') && (emailControl.touched || emailControl.dirty)"
+          aria-live="polite"
+        >
+          Enter a valid email address.
+        </div>
+      </div>
+
+      <div class="field-group">
+        <div class="field-header">
+          <label for="register-password">Password</label>
+          <button
+            type="button"
+            class="toggle-button"
+            (click)="togglePasswordVisibility()"
+            [attr.aria-label]="passwordVisible() ? 'Hide password' : 'Show password'"
+          >
+            {{ passwordVisible() ? 'Hide' : 'Show' }}
+          </button>
+        </div>
+
+        <input
+          id="register-password"
+          [type]="passwordVisible() ? 'text' : 'password'"
+          formControlName="password"
+          autocomplete="new-password"
+          placeholder="Create a password"
+          [attr.aria-invalid]="passwordControl.invalid && (passwordControl.touched || passwordControl.dirty)"
+          [class.input-error]="passwordControl.invalid && (passwordControl.touched || passwordControl.dirty)"
+        />
+
+        <div
+          class="error-message"
+          *ngIf="passwordControl.hasError('required') && (passwordControl.touched || passwordControl.dirty)"
+          aria-live="polite"
+        >
+          Password is required.
+        </div>
+        <div
+          class="error-message"
+          *ngIf="passwordControl.hasError('minlength') && (passwordControl.touched || passwordControl.dirty)"
+          aria-live="polite"
+        >
+          Password must be at least 8 characters.
+        </div>
+        <div class="error-message" *ngIf="passwordControl.hasError('uppercase') && (passwordControl.touched || passwordControl.dirty)" aria-live="polite">
+          Password must include at least 1 uppercase letter.
+        </div>
+        <div class="error-message" *ngIf="passwordControl.hasError('lowercase') && (passwordControl.touched || passwordControl.dirty)" aria-live="polite">
+          Password must include at least 1 lowercase letter.
+        </div>
+        <div class="error-message" *ngIf="passwordControl.hasError('number') && (passwordControl.touched || passwordControl.dirty)" aria-live="polite">
+          Password must include at least 1 number.
+        </div>
+        <div class="error-message" *ngIf="passwordControl.hasError('specialCharacter') && (passwordControl.touched || passwordControl.dirty)" aria-live="polite">
+          Password must include at least 1 special character.
+        </div>
+      </div>
+
+      <div class="field-group">
+        <div class="field-header">
+          <label for="register-confirm-password">Confirm Password</label>
+          <button
+            type="button"
+            class="toggle-button"
+            (click)="toggleConfirmPasswordVisibility()"
+            [attr.aria-label]="confirmPasswordVisible() ? 'Hide confirm password' : 'Show confirm password'"
+          >
+            {{ confirmPasswordVisible() ? 'Hide' : 'Show' }}
+          </button>
+        </div>
+
+        <input
+          id="register-confirm-password"
+          [type]="confirmPasswordVisible() ? 'text' : 'password'"
+          formControlName="confirmPassword"
+          autocomplete="new-password"
+          placeholder="Confirm your password"
+          [attr.aria-invalid]="(confirmPasswordControl.invalid || registrationForm.hasError('passwordMismatch')) && (confirmPasswordControl.touched || confirmPasswordControl.dirty)"
+          [class.input-error]="(confirmPasswordControl.invalid || registrationForm.hasError('passwordMismatch')) && (confirmPasswordControl.touched || confirmPasswordControl.dirty)"
+        />
+
+        <div
+          class="error-message"
+          *ngIf="confirmPasswordControl.hasError('required') && (confirmPasswordControl.touched || confirmPasswordControl.dirty)"
+          aria-live="polite"
+        >
+          Please confirm your password.
+        </div>
+        <div
+          class="error-message"
+          *ngIf="registrationForm.hasError('passwordMismatch') && (confirmPasswordControl.touched || confirmPasswordControl.dirty)"
+          aria-live="polite"
+        >
+          Passwords do not match.
+        </div>
+      </div>
+
+      <div class="checkbox-row">
+        <input
+          id="register-terms"
+          type="checkbox"
+          formControlName="termsAccepted"
+          [attr.aria-invalid]="termsAcceptedControl.invalid && (termsAcceptedControl.touched || termsAcceptedControl.dirty)"
+        />
+        <button type="button" class="terms-link" (click)="openTermsModal()">
+          I agree to the Terms and Conditions
+        </button>
+      </div>
+
+      <div
+        class="error-message checkbox-error"
+        *ngIf="termsAcceptedControl.hasError('required') && (termsAcceptedControl.touched || termsAcceptedControl.dirty)"
+        aria-live="polite"
+      >
+        You must accept the terms and conditions.
+      </div>
+
+      <button
+        type="submit"
+        class="primary-button"
+        [disabled]="registrationForm.invalid || isSubmitting()"
+      >
+        <ng-container *ngIf="!isSubmitting(); else loadingState">Create Account</ng-container>
+        <ng-template #loadingState>
+          <span class="spinner" aria-label="Loading"></span>
+          Creating account...
+        </ng-template>
+      </button>
+    </form>
+
+    @if (showTermsModal()) {
+      <div class="terms-modal-backdrop" (click)="closeTermsModal()">
+        <div class="terms-modal" role="dialog" aria-modal="true" aria-labelledby="terms-title" (click)="$event.stopPropagation()">
+          <div class="terms-modal-header">
+            <h2 id="terms-title">Terms and Conditions</h2>
+            <button type="button" class="modal-close" (click)="closeTermsModal()" aria-label="Close terms and conditions">×</button>
+          </div>
+
+          <div class="terms-content">
+            <p>Example terms for this public source distribution. Replace this text with approved terms before using the application as a live service.</p>
+          </div>
+
+          <div class="terms-actions">
+            <button type="button" class="secondary-button" (click)="closeTermsModal()">Close</button>
+            <button type="button" class="primary-button" (click)="acceptTerms()">I Agree</button>
+          </div>
+        </div>
+      </div>
+    }
+
+    <p class="switch-text">
+      Already have an account?
+      <a routerLink="/login">Login</a>
+    </p>
+  </section>
+</main>

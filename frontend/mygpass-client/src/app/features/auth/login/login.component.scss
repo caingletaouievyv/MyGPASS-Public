@@ -1,0 +1,80 @@
+@use '../auth-layout';
+
+.auth-card {
+  width: min(100%, 430px);
+  padding: 28px 24px 20px;
+}
+
+.meta-row {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.inline-link {
+  color: #29216f;
+  font-size: 0.82rem;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.inline-link:hover {
+  text-decoration: underline;
+}
+
+.guest-button {
+  width: 100%;
+  margin-top: 12px;
+  padding: 10px;
+  border: 1px solid rgba(41, 33, 111, 0.25);
+  border-radius: 6px;
+  background: #ffffff;
+  color: #29216f;
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.guest-button:hover,
+.guest-button:focus-visible {
+  background: #f5f3ff;
+}
+
+@media (max-width: 480px) {
+  .auth-page {
+    padding: 20px 16px;
+  }
+
+  .auth-card {
+    width: min(100%, 380px);
+    padding: 18px 16px 12px;
+  }
+}
+
+.brand-block {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.brand-mark {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+}
+
+.brand-mark img {
+  width: 400px;
+  max-width: 100%;
+  height: auto;
+}
+
+@media (max-width: 480px) {
+  .brand-mark img {
+    width: 340px;
+  }
+}

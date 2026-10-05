@@ -1,0 +1,108 @@
+<main class="auth-page">
+  <section class="auth-card" aria-label="Login form">
+    <header class="brand-block">
+      <div class="brand-mark" aria-label="GPASS branding">
+        <span class="brand-wordmark">MyGPASS</span>
+      </div>
+    </header>
+
+    <div class="auth-header">
+      <h1>Login</h1>
+    </div>
+
+    <div class="error-message" *ngIf="errorMessage()" role="alert" aria-live="polite">{{ errorMessage() }}</div>
+
+    <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" novalidate>
+      <div class="field-group">
+        <label for="login-mobile-number">Mobile Number</label>
+        <input
+          id="login-mobile-number"
+          type="tel"
+          formControlName="mobileNumber"
+          autocomplete="tel"
+          inputmode="numeric"
+          placeholder="Enter your mobile number"
+          [attr.aria-invalid]="mobileNumberControl.invalid && (mobileNumberControl.touched || mobileNumberControl.dirty)"
+          [class.input-error]="mobileNumberControl.invalid && (mobileNumberControl.touched || mobileNumberControl.dirty)"
+        />
+
+        <div
+          class="error-message"
+          *ngIf="mobileNumberControl.hasError('required') && (mobileNumberControl.touched || mobileNumberControl.dirty)"
+          aria-live="polite"
+        >
+          Mobile number is required.
+        </div>
+        <div
+          class="error-message"
+          *ngIf="mobileNumberControl.hasError('invalidMobileNumber') && (mobileNumberControl.touched || mobileNumberControl.dirty)"
+          aria-live="polite"
+        >
+          Enter a valid Philippine mobile number (09XXXXXXXXX).
+        </div>
+      </div>
+
+      <div class="field-group">
+        <div class="field-header">
+          <label for="login-password">Password</label>
+          <button
+            type="button"
+            class="toggle-button"
+            (click)="togglePasswordVisibility()"
+            [attr.aria-label]="passwordVisible() ? 'Hide password' : 'Show password'"
+          >
+            {{ passwordVisible() ? 'Hide' : 'Show' }}
+          </button>
+        </div>
+
+        <input
+          id="login-password"
+          [type]="passwordVisible() ? 'text' : 'password'"
+          formControlName="password"
+          autocomplete="current-password"
+          placeholder="Enter your password"
+          [attr.aria-invalid]="passwordControl.invalid && (passwordControl.touched || passwordControl.dirty)"
+          [class.input-error]="passwordControl.invalid && (passwordControl.touched || passwordControl.dirty)"
+        />
+
+        <div
+          class="error-message"
+          *ngIf="passwordControl.hasError('required') && (passwordControl.touched || passwordControl.dirty)"
+          aria-live="polite"
+        >
+          Password is required.
+        </div>
+        <div
+          class="error-message"
+          *ngIf="passwordControl.hasError('minlength') && (passwordControl.touched || passwordControl.dirty)"
+          aria-live="polite"
+        >
+          Password must be at least 8 characters.
+        </div>
+      </div>
+
+      <div class="meta-row">
+        <a class="inline-link" routerLink="/forgot-password">Forgot Password?</a>
+      </div>
+
+      <button
+        type="submit"
+        class="primary-button"
+        [disabled]="loginForm.invalid || isSubmitting()"
+      >
+        <ng-container *ngIf="!isSubmitting(); else loadingState">Login</ng-container>
+        <ng-template #loadingState>
+          <span class="spinner" aria-label="Loading"></span>
+          Logging in...
+        </ng-template>
+      </button>
+    </form>
+
+    <p class="switch-text">
+      Don't have an account?
+      <a routerLink="/register">Register</a>
+    </p>
+
+    <button type="button" class="guest-button" (click)="continueAsGuest()">Continue as Guest</button>
+  </section>
+</main>

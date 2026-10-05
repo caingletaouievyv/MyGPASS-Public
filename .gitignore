@@ -1,0 +1,59 @@
+# Git metadata
+.git/
+
+# Build and generated output
+**/node_modules/
+**/dist/
+**/.angular/
+**/bin/
+**/obj/
+**/publish/
+**/out-tsc/
+**/coverage/
+**/TestResults/
+**/.sass-cache/
+
+# Application settings: only reviewed, sanitized examples/templates may be tracked
+**/appsettings.json
+**/appsettings.*.json
+!**/appsettings.example.json
+!**/appsettings.*.example.json
+!**/appsettings.*.template.json
+
+# Local environment and secret material
+.env
+.env.*
+!.env.example
+!.env.template
+**/secrets/
+**/secrets.*
+**/secret.*
+**/*.pfx
+**/*.pem
+**/*.key
+**/*.publishsettings
+**/*.tfstate
+**/*.tfvars
+
+# Logs and generated databases
+*.log
+npm-debug.log*
+*.db
+*.sqlite
+*.sqlite3
+
+# IDE/editor files
+.vs/
+.idea/
+.vscode/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+*.swp
+*.swo
+
+# Operating-system files
+.DS_Store
+Thumbs.db
+desktop.ini

@@ -1,0 +1,21 @@
+:host {
+  display: block;
+}
+
+.booking-footer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px 24px 22px;
+  background: transparent;
+}
+
+.powered-by {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  color: #1f2933;
+  font-size: 0.8rem;
+  font-weight: 600;
+}

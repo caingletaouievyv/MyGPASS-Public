@@ -1,0 +1,32 @@
+<main class="auth-page">
+  <section class="auth-card" aria-live="polite" aria-label="Email verification status">
+    <header class="brand-block">
+      <div class="brand-mark" aria-label="GPASS branding">
+        <span class="brand-wordmark">MyGPASS</span>
+      </div>
+    </header>
+
+    <div class="auth-header">
+      <h1>Email Verification</h1>
+    </div>
+
+    <div class="status-panel" *ngIf="verificationState() === 'loading'">
+      <div class="spinner" aria-label="Loading"></div>
+      <p>{{ message() }}</p>
+    </div>
+
+    <div class="status-panel success" *ngIf="verificationState() === 'success'" role="alert">
+      <p>{{ message() }}</p>
+      <button type="button" class="primary-button" (click)="navigateToLogin()">
+        Go to Login
+      </button>
+    </div>
+
+    <div class="status-panel error" *ngIf="verificationState() === 'error' || verificationState() === 'missing'" role="alert">
+      <p>{{ message() }}</p>
+      <button type="button" class="secondary-button" (click)="navigateToLogin()">
+        Back to Login
+      </button>
+    </div>
+  </section>
+</main>

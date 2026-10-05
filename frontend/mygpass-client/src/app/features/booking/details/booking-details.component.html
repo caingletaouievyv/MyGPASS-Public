@@ -1,0 +1,87 @@
+<main class="booking-page">
+  <br><h1>Booking Details</h1>
+
+  <div class="booking-layout">
+    <section class="booking-form-card" aria-label="Booking information">
+      @if (catalogStatus() === 'loading') { <p class="catalog-status">Loading schedule...</p> }
+      @else if (catalogStatus() === 'error') {
+        <div class="catalog-status catalog-error" role="alert"><p>Unable to load ports and schedules. Confirm the API is running, then try again.</p><button type="button" class="retry-button" (click)="loadCatalog()">Retry</button></div>
+      } @else {
+        <form id="booking-form" [formGroup]="bookingForm" (ngSubmit)="proceedToPayment()" novalidate>
+          <div class="field"><label for="origin-port">Origin Port</label><button id="origin-port" type="button" class="route-display-button" (click)="goToRoute('origin')" [class.input-error]="originPortIdControl.invalid && originPortIdControl.touched">{{ originName() || 'Select origin port' }}</button>@if (originPortIdControl.hasError('required') && originPortIdControl.touched) {<p class="error">Origin port is required.</p>}</div>
+          <div class="field"><label for="destination-port">Destination Port</label><select id="destination-port" formControlName="destinationPortId" (change)="onDestinationChange()" [class.input-error]="destinationPortIdControl.invalid && destinationPortIdControl.touched"><option value="" disabled>Select destination port</option>@for (port of availableDestinations(); track port.portId) {<option [value]="port.portId">{{ port.name }}</option>}</select>@if (destinationPortIdControl.hasError('required') && destinationPortIdControl.touched) {<p class="error">Destination port is required.</p>}@if (bookingForm.hasError('samePort') && destinationPortIdControl.touched) {<p class="error">Destination must be different from origin.</p>}</div>
+          <div class="field"><label for="shipping-line">Shipping Lines</label><select id="shipping-line" formControlName="shippingLineId" (change)="onShippingLineChange()" [class.input-error]="shippingLineIdControl.invalid && shippingLineIdControl.touched"><option value="" disabled>@if (!originPortIdControl.value || !destinationPortIdControl.value) {Select "Origin Port" and "Destination Port" first.} @else {Shipping Lines.}</option>@for (line of availableShippingLines(); track line.shippingLineId) {<option [value]="line.shippingLineId">{{ line.name }}</option>}</select>@if (originPortIdControl.value && destinationPortIdControl.value && availableShippingLines().length === 0) {<p class="error">No shipping lines available</p>}@if (shippingLineIdControl.hasError('required') && shippingLineIdControl.touched && availableShippingLines().length > 0) {<p class="error">Shipping line is required.</p>}</div>
+
+          <div class="departure-fields">
+            <div class="field departure-field">
+              <div class="departure-label-row">
+                <label for="departure-calendar">Date of Departure</label>
+                <span class="departure-info">
+                  <button
+                    type="button"
+                    class="schedule-info-button"
+                    [attr.aria-expanded]="showDepartureScheduleInfo()"
+                    aria-controls="departure-schedule-info"
+                    aria-label="Show departure schedule information"
+                    (click)="toggleDepartureScheduleInfo()">ⓘ</button>
+                  @if (showDepartureScheduleInfo()) {
+                    <div id="departure-schedule-info" class="schedule-info" role="status" aria-live="polite">
+                      <div class="schedule-info-header">
+                        <strong>Departure schedule</strong>
+                        <button type="button" class="schedule-info-close" aria-label="Close departure schedule information" (click)="closeDepartureScheduleInfo()">×</button>
+                      </div>
+                      <p>{{ departureScheduleExplanation() }}</p>
+                    </div>
+                  }
+                </span>
+              </div>
+              @if (!shippingLineIdControl.value) {
+                <div class="calendar-placeholder" role="status" aria-live="polite">
+                  <h3>Select a shipping line to continue</h3>
+                  <p>Choose a shipping line above to view available departure dates and times.</p>
+                </div>
+              } @else {
+                <div id="departure-calendar" class="calendar" [class.input-error]="dateOfDepartureControl.invalid && dateOfDepartureControl.touched">
+                  <div class="calendar-header">
+                    <button type="button" class="calendar-nav" (click)="changeCalendarMonth(-1)" aria-label="Previous month">&#8249;</button>
+                    <span>{{ calendarMonthLabel() }}</span>
+                    <button type="button" class="calendar-nav" (click)="changeCalendarMonth(1)" aria-label="Next month">&#8250;</button>
+                  </div>
+                  <div class="calendar-weekdays">
+                    @for (day of calendarWeekDays; track day) {
+                      <span>{{ day }}</span>
+                    }
+                  </div>
+                  <div class="calendar-grid">
+                    @for (cell of calendarDays(); track $index) {
+                      <button
+                        type="button"
+                        class="calendar-day"
+                        [class.is-outside-month]="!cell.inMonth"
+                        [class.is-selected]="cell.selected"
+                        [class.is-disabled]="!cell.selectable"
+                        [disabled]="!cell.selectable"
+                        (click)="selectCalendarDate(cell.date)">
+                        {{ cell.date ? cell.date.getDate() : '' }}
+                      </button>
+                    }
+                  </div>
+                </div>
+                @if (dateOfDepartureControl.hasError('required') && dateOfDepartureControl.touched) {<p class="error">Date of departure is required.</p>}@if (dateOfDepartureControl.hasError('unavailableDate') && dateOfDepartureControl.touched) {<p class="error">No vessel schedule is available for the selected date.</p>}
+              }
+            </div>
+          </div>
+
+          @if (shippingLineIdControl.value) {
+            <div class="field"><label for="departure-time">Estimated Time of Departure</label><select id="departure-time" formControlName="vesselVisitId" (change)="onVesselVisitChange($event)" [class.input-error]="vesselVisitIdControl.invalid && vesselVisitIdControl.touched"><option value="" disabled>@if (!selectedDateOfDeparture()) {Select "Date of Departure" first.} @else {Estimated Time of Departure.}</option>@for (visit of uniqueVisitsForSelectedDate(); track visit.vesselVisitId) {<option [value]="visit.vesselVisitId">{{ formatEstimatedTime(visit) }}</option>}</select>@if (vesselVisitIdControl.hasError('required') && vesselVisitIdControl.touched && visitsForSelectedDate().length > 0) {<p class="error">Estimated time of departure is required.</p>}</div>
+          }
+
+          <div class="field"><label for="passenger-count">No. of Passenger/s</label><input id="passenger-count" type="number" formControlName="passengerCount" min="1" max="10" step="1" inputmode="numeric" />@if (passengerCountControl.hasError('required') && passengerCountControl.touched) {<p class="error">Number of passengers is required.</p>}@if (passengerCountControl.hasError('min') && passengerCountControl.touched) {<p class="error">Number of passengers must be at least 1.</p>}@if (passengerCountControl.hasError('max') && passengerCountControl.touched) {<p class="error">Number of passengers cannot exceed 10.</p>}</div>
+        </form>
+        <button class="primary-button form-action" type="submit" form="booking-form">PROCEED TO PAYMENT</button>
+      }
+    </section>
+
+    <aside class="summary-card" aria-label="Order summary"><h2>Order Summary</h2><div class="fee-banner">Fee</div><p class="route">@if (originName() && destinationName()) { {{ originName() }} <span class="route-arrow">→</span> {{ destinationName() }} } @else { Select origin and destination ports. }</p><p class="payment-label">Select Payment Method</p><label class="payment-option"><input type="radio" name="payment-method" checked disabled /><span class="gcash-mark" aria-hidden="true">G</span><span>{{ paymentMethod }}</span></label><div class="charge-row"><span>Terminal Fee</span><span>{{ peso(terminalFee) }}</span></div><div class="charge-row"><span>{{ passengerCount() }} Passenger{{ passengerCount() > 1 ? 's' : '' }}</span><span>{{ peso(amount()) }}</span></div><div class="charge-row"><span>Convenience Fee</span><span>{{ peso(gcashFee) }}</span></div><div class="total-row"><span>TOTAL</span><span>{{ peso(total()) }}</span></div><button class="primary-button summary-action" type="submit" form="booking-form">PROCEED TO PAYMENT</button></aside>
+  </div>
+</main>
