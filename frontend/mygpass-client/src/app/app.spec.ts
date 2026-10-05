@@ -52,43 +52,32 @@ describe('App', () => {
   });
 
   it('should keep the initial splash visible during startup', () => {
-    let loadCallback: (() => void) | undefined;
-    let startupCallback: (() => void) | undefined;
+    vi.useFakeTimers();
 
-    vi.spyOn(window, 'addEventListener').mockImplementation((type, listener) => {
-      if (type === 'load') {
-        loadCallback = listener as () => void;
+    try {
+      const fixture = TestBed.createComponent(App);
+      const app = fixture.componentInstance;
+      fixture.detectChanges();
+
+      expect(app.isAppReady()).toBeFalsy();
+
+      const loadingLogo = fixture.nativeElement.querySelector('.loading-logo');
+      expect(loadingLogo).not.toBeNull();
+      expect(loadingLogo.textContent).toBe('MyGPASS');
+
+      if (document.readyState !== 'complete') {
+        window.dispatchEvent(new Event('load'));
       }
-    });
 
-    const splashTimer = vi.spyOn(window, 'setTimeout').mockImplementation((handler: TimerHandler, delay?: number) => {
-      if (delay === 4000) {
-        startupCallback = handler as () => void;
-      }
-      return 0 as any;
-    });
+      vi.advanceTimersByTime(3999);
+      expect(app.isAppReady()).toBeFalsy();
 
-    const fixture = TestBed.createComponent(App);
-    const app = fixture.componentInstance;
-    fixture.detectChanges();
+      vi.advanceTimersByTime(1);
+      fixture.detectChanges();
 
-    expect(app.isAppReady()).toBeFalsy();
-    const loadingLogo = fixture.nativeElement.querySelector('.loading-logo');
-    expect(loadingLogo).not.toBeNull();
-    expect(loadingLogo.textContent).toBe('MyGPASS');
-
-    if (document.readyState === 'complete') {
-      expect(startupCallback).toBeDefined();
-    } else {
-      expect(loadCallback).toBeDefined();
-      loadCallback?.();
-      expect(startupCallback).toBeDefined();
+      expect(app.isAppReady()).toBeTruthy();
+    } finally {
+      vi.useRealTimers();
     }
-
-    expect(splashTimer).toHaveBeenCalledWith(expect.any(Function), 4000);
-    startupCallback?.();
-    fixture.detectChanges();
-
-    expect(app.isAppReady()).toBeTruthy();
   });
 });
