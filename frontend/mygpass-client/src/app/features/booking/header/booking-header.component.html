@@ -1,7 +1,7 @@
 <header class="site-header">
   <div class="brand">
-    <a class="brand-mark" routerLink="/booking/route" aria-label="MyGPASS home">
-      <span class="brand-wordmark">MyGPASS</span>
+    <a class="brand-mark" routerLink="/booking/route" aria-label="GPASS home">
+      <img src="/assets/MyGPASS.png" alt="GPASS" />
     </a>
   </div>
 
@@ -15,38 +15,38 @@
     </a>
     }
     @if (isAuthenticated()) {
-    <a
-      routerLink="/account"
+    <a 
+      routerLink="/account" 
       [class.active]="isActive('/account')"
       class="nav-link nav-account"
       aria-current="page">
       Account
     </a>
-    <a
-      routerLink="/history"
+    <a 
+      routerLink="/history" 
       [class.active]="isActive('/history')"
       class="nav-link nav-history"
       aria-current="page">
       History
     </a>
     @if (authService.isAdministrator()) {
-      <a
-        routerLink="/admin/users"
-        [class.active]="isActive('/admin/users')"
-        class="nav-link nav-admin">
-        Admin
-      </a>
-      <a
-        routerLink="/admin/schedules"
-        [class.active]="isActive('/admin/schedules')"
-        class="nav-link nav-admin">
-        Schedules
-      </a>
+    <a
+      routerLink="/admin/users"
+      [class.active]="isActive('/admin/users')"
+      class="nav-link nav-admin">
+      Admin
+    </a>
+    <a
+      routerLink="/admin/schedules"
+      [class.active]="isActive('/admin/schedules')"
+      class="nav-link nav-admin">
+      Schedule Maintenance
+    </a>
     }
-    <button
-      type="button"
-      class="nav-logout"
-      (click)="logout()"
+    <button 
+      type="button" 
+      class="nav-logout" 
+      (click)="logout()" 
       aria-label="Logout from GPASS">
       Logout
     </button>
