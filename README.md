@@ -204,6 +204,16 @@ The public repository currently focuses on the passenger-facing MyGPASS experien
 - Private infrastructure, credentials, internal URLs, and production configuration are intentionally excluded.
 - Any provider-specific integrations that are not part of the public release should be treated as unavailable in this repository.
 
+## Relationship to the private implementation repository
+
+This repository is the sanitized public/demo counterpart to the private `MyGPASS` implementation repository. It is **not an automatic or complete mirror**.
+
+- Keep shared, confirmed passenger-facing behavior and relevant fixes aligned when they are suitable for public release.
+- Keep private deployment configuration, internal infrastructure details, VAPT working documents, operational notes, and secrets out of this repository.
+- Do not copy private documentation wholesale. Public documentation should describe this repository's runnable demo and its own validation steps.
+- Treat the private repository's implementation and deployment documents as authoritative for internal deployment boundaries. A GitHub commit or code match does not mean a feature has been approved or deployed to UAT/PROD.
+- Before syncing a change, compare the actual source files and tests; do not assume matching commit histories or automatic synchronization between the repositories.
+
 ## Project Scope
 
 MyGPASS is maintained as a practical full-stack application with a focus on:
