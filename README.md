@@ -206,6 +206,8 @@ The public repository currently focuses on the passenger-facing MyGPASS experien
 
 ## Relationship to the private implementation repository
 
+See [`docs/REPOSITORY_SYNC.md`](docs/REPOSITORY_SYNC.md) for the synchronization policy and latest file-level alignment review.
+
 This repository is the sanitized public/demo counterpart to the private `MyGPASS` implementation repository. It is **not an automatic or complete mirror**.
 
 - Keep shared, confirmed passenger-facing behavior and relevant fixes aligned when they are suitable for public release.
