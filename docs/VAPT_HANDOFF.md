@@ -7,7 +7,7 @@ This repository is a public source snapshot for the approved user-facing MyGPASS
 1. Confirm the 11-page scope against the actual UAT/PROD release.
 2. Obtain written authorization, approved URLs/API base URLs, testing dates/hours, source IPs, and escalation contacts from the environment owner/coordinator.
 3. Deliver approved test accounts through an approved secure channel. Never add passwords, tokens, or recovery codes to this repository.
-4. Keep Admin User Maintenance and Admin Schedule Maintenance excluded from UAT/PROD and from this agreed test scope unless the owner approves a scope change in writing.
+4. Confirm the release matches this public snapshot: Admin User Maintenance and Admin Schedule Maintenance UI and API management operations are removed. Keep private-only admin functionality out of this public release unless the system owner explicitly approves a different release scope.
 5. Confirm whether WAF/IDS/IPS/CDN/proxy/load balancer and access restrictions exist and whether they are included in the engagement.
 6. Record all validation results. Do not label this repository or any environment “VAPT-passed” based only on compilation or automated tests.
 
@@ -55,4 +55,4 @@ For each command, record date/time, commit SHA, tool/runtime versions, exit code
 
 ## Scope caution
 
-The frontend routes are limited to the agreed user-facing pages. The backend source may contain operations that are not part of the 11-page engagement; only test endpoints covered by the approved written scope. The presence of an endpoint in source is not authorization to test it.
+The public snapshot contains the agreed user-facing pages and removes admin maintenance endpoints. The read-only vessel-visit endpoint remains for booking route selection. Test only endpoints covered by the approved written scope.

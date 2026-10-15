@@ -1,7 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 using MyGPASS.Api.DTOs.Auth;
 using MyGPASS.Api.DTOs.Bookings;
-using MyGPASS.Api.DTOs.Users;
 using Xunit;
 
 namespace MyGPASS.Api.Tests;
@@ -92,30 +91,6 @@ public class DtoValidationTests
         Assert.Contains(Validate(verifyRequest), error => error.MemberNames.Contains(nameof(verifyRequest.Token)));
         Assert.Contains(Validate(resetRequest), error => error.MemberNames.Contains(nameof(resetRequest.Token)));
         Assert.Contains(Validate(resetRequest), error => error.MemberNames.Contains(nameof(resetRequest.NewPassword)));
-    }
-
-    [Fact]
-    public void UserUpdateRequest_RejectsInvalidMobileNumber()
-    {
-        var request = new UserUpdateRequestDto
-        {
-            FirstName = "Valid",
-            LastName = "User",
-            MobileNumber = "not-a-mobile",
-            Email = "valid@example.com"
-        };
-
-        Assert.Contains(Validate(request), error => error.MemberNames.Contains(nameof(request.MobileNumber)));
-    }
-
-    [Fact]
-    public void UserRoleUpdateRequest_AllowsValidRoleLengthAndRejectsExcessiveRole()
-    {
-        var validRequest = new UserRoleUpdateRequestDto { Role = "Admin" };
-        var invalidRequest = new UserRoleUpdateRequestDto { Role = new string('A', 21) };
-
-        Assert.Empty(Validate(validRequest));
-        Assert.Contains(Validate(invalidRequest), error => error.MemberNames.Contains(nameof(invalidRequest.Role)));
     }
 
     private static List<ValidationResult> Validate(object instance)
