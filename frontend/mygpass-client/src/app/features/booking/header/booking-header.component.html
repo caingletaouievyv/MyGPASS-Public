@@ -29,20 +29,6 @@
       aria-current="page">
       History
     </a>
-    @if (authService.isAdministrator()) {
-    <a
-      routerLink="/admin/users"
-      [class.active]="isActive('/admin/users')"
-      class="nav-link nav-admin">
-      Admin
-    </a>
-    <a
-      routerLink="/admin/schedules"
-      [class.active]="isActive('/admin/schedules')"
-      class="nav-link nav-admin">
-      Schedule Maintenance
-    </a>
-    }
     <button 
       type="button" 
       class="nav-logout" 

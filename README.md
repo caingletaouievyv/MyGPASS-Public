@@ -4,15 +4,15 @@ A full-stack passenger booking system built with Angular, ASP.NET Core, and SQL 
 
 MyGPASS provides a user-facing flow for searching routes, creating passenger bookings, managing account access, completing payment steps, and accessing digital passes.
 
-## 🚀 Demo
+## Demo
 
 **Live demo:** Coming soon
 
-The public repository is intended to provide a clean, runnable demonstration of the MyGPASS user-facing application. The frontend routes in this VAPT-preparation branch are limited to the agreed user-facing 11-page scope; Admin User Maintenance and Admin Schedule Maintenance are excluded.
+The public repository is intended to provide a clean, runnable demonstration of the MyGPASS user-facing application. The frontend routes and navigation in this VAPT-preparation branch are limited to the agreed user-facing 11-page scope
 
 > **Demo/payment note:** Payment functionality in the public project is for demonstration/testing purposes. It does not represent a live production payment gateway or real-money transaction.
 
-## ✨ Features
+## Features
 
 - Passenger route and schedule selection
 - Booking details and passenger information
@@ -26,7 +26,7 @@ The public repository is intended to provide a clean, runnable demonstration of 
 - Backend API with authentication and authorization
 - Automated frontend and backend tests
 
-## 🧭 Booking Flow
+## Booking Flow
 
 The main user journey follows this general flow:
 
@@ -38,7 +38,7 @@ The main user journey follows this general flow:
 
 Guest bookings can also be accessed through a protected guest-access mechanism without requiring a registered account.
 
-## 🏗️ Architecture
+## Architecture
 
 MyGPASS follows a layered full-stack architecture:
 
@@ -60,7 +60,7 @@ SQL Server / Azure SQL
 
 The frontend handles the user experience and API integration. The backend exposes controller endpoints and keeps business logic in application services. Data access is handled through Entity Framework Core against SQL Server-compatible storage.
 
-## 🔐 Security
+## Security
 
 Security is treated as part of the application design rather than an afterthought.
 
@@ -80,7 +80,7 @@ The public project includes or is structured around:
 
 No credentials, secrets, private infrastructure details, or internal production configuration are included in this public repository.
 
-## 🛠️ Tech Stack
+## Tech Stack
 
 | Layer | Technology |
 | --- | --- |
@@ -93,7 +93,7 @@ No credentials, secrets, private infrastructure details, or internal production 
 | Frontend Testing | Vitest / Angular testing tools |
 | Backend Testing | .NET test stack |
 
-## 📁 Project Structure
+## Project Structure
 
 ```text
 MyGPASS/
@@ -109,14 +109,14 @@ MyGPASS/
 
 The public repository focuses on the user-facing application. Private/internal implementation details are intentionally excluded.
 
-## 🛡️ VAPT preparation
+## VAPT preparation
 
 - [11-page VAPT scope checklist](docs/VAPT_CHECKLIST.md) — scope, exclusions, readiness gates, and secure test-account handling.
 - [VAPT handoff and validation runbook](docs/VAPT_HANDOFF.md) — build, test, dependency-audit, and evidence-recording commands.
 
 The checklist intentionally does not publish UAT/PROD URLs or test credentials. Obtain those from the authorized environment owner through the approved channel. The presence of source code or an API endpoint is not authorization to test it. Build, automated-test, and security-audit results must be recorded before claiming validation; this repository has not been certified VAPT-passed by these documents.
 
-## 💻 Local Development
+## Local Development
 
 ### Prerequisites
 
@@ -155,7 +155,7 @@ dotnet test "backend\MyGPASS.Api.Tests\MyGPASS.Api.Tests.csproj" --nologo
 
 Database schema changes are maintained as versioned SQL scripts rather than relying on Entity Framework migrations. Apply the appropriate schema scripts to your local database before running the API.
 
-## 🧪 Testing
+## Testing
 
 The project includes automated tests for both frontend and backend code.
 
@@ -174,7 +174,7 @@ dotnet test "backend\MyGPASS.Api.Tests\MyGPASS.Api.Tests.csproj" --nologo
 
 Tests should pass before changes are considered ready for the public repository.
 
-## 📸 Screenshots
+## Screenshots
 
 Screenshots and a hosted demo will be added as the public demo is prepared.
 
@@ -187,7 +187,7 @@ Suggested showcase areas:
 - Digital passenger pass
 - Account and booking history
 
-## 📌 Current Status
+## Current Status
 
 **Public release:** Active development / demo preparation
 
