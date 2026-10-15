@@ -1,5 +1,3 @@
-using MyGPASS.Api.Security;
-
 namespace MyGPASS.Api.Models;
 
 public class User
@@ -23,5 +21,6 @@ public class User
     public bool IsEmailVerified { get; set; }
 
     public ICollection<Booking> Bookings { get; set; } = new List<Booking>();
-    public string Role { get; set; } = Roles.User;
+    [System.ComponentModel.DataAnnotations.Schema.NotMapped]
+    public string Role { get; set; } = "User";
 }
