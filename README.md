@@ -8,7 +8,7 @@ MyGPASS provides a user-facing flow for searching routes, creating passenger boo
 
 **Live demo:** Coming soon
 
-The public repository is intended to provide a clean, runnable demonstration of the MyGPASS user-facing application.
+The public repository is intended to provide a clean, runnable demonstration of the MyGPASS user-facing application. The frontend routes in this VAPT-preparation branch are limited to the agreed user-facing 11-page scope; Admin User Maintenance and Admin Schedule Maintenance are excluded.
 
 > **Demo/payment note:** Payment functionality in the public project is for demonstration/testing purposes. It does not represent a live production payment gateway or real-money transaction.
 
@@ -108,6 +108,13 @@ MyGPASS/
 ```
 
 The public repository focuses on the user-facing application. Private/internal implementation details are intentionally excluded.
+
+## 🛡️ VAPT preparation
+
+- [11-page VAPT scope checklist](docs/VAPT_CHECKLIST.md) — scope, exclusions, readiness gates, and secure test-account handling.
+- [VAPT handoff and validation runbook](docs/VAPT_HANDOFF.md) — build, test, dependency-audit, and evidence-recording commands.
+
+The checklist intentionally does not publish UAT/PROD URLs or test credentials. Obtain those from the authorized environment owner through the approved channel. The presence of source code or an API endpoint is not authorization to test it. Build, automated-test, and security-audit results must be recorded before claiming validation; this repository has not been certified VAPT-passed by these documents.
 
 ## 💻 Local Development
 
