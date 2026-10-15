@@ -10,9 +10,7 @@ import { DummyPaymentComponent } from './features/booking/payment/dummy-payment.
 import { BookingConfirmationComponent } from './features/booking/confirmation/booking-confirmation.component';
 import { BookingLayoutComponent } from './features/booking/layout/booking-layout.component';
 import { BookingRouteComponent } from './features/booking/route/booking-route.component';
-import { AdminUsersComponent } from './features/admin/admin-users.component';
-import { AdminSchedulesComponent } from './features/admin/admin-schedules.component';
-import { adminGuard, authGuard } from './features/auth/auth.guard';
+import { authGuard } from './features/auth/auth.guard';
 import { AccountComponent } from './features/account/account.component';
 import { HistoryComponent } from './features/history/history.component';
 
@@ -45,22 +43,6 @@ export const routes: Routes = [
     component: BookingLayoutComponent,
     canActivate: [authGuard],
     children: [{ path: '', component: HistoryComponent }]
-  },
-  {
-    path: 'admin',
-    component: BookingLayoutComponent,
-    children: [
-      {
-        path: 'users',
-        component: AdminUsersComponent,
-        canActivate: [adminGuard]
-      },
-      {
-        path: 'schedules',
-        component: AdminSchedulesComponent,
-        canActivate: [adminGuard]
-      }
-    ]
   },
   { path: '**', redirectTo: 'login' }
 ];
