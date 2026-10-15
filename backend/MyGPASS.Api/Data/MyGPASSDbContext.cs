@@ -73,9 +73,6 @@ public class MyGPASSDbContext : DbContext
             entity.Property(x => x.IsEmailVerified)
                 .HasDefaultValue(false);
 
-            entity.Property(x => x.Role)
-                .HasMaxLength(30)
-                .IsRequired();
         });
 
         modelBuilder.Entity<Booking>(entity =>

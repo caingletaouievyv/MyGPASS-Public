@@ -40,9 +40,10 @@ The VAPT team should test the API routes and authorization/data-access behavior 
 
 ## 4. Exclusions and boundaries
 
-- Admin User Maintenance and Admin Schedule Maintenance are excluded from the agreed 11-page scope.
-- Do not deploy or enable those admin UI pages in UAT or PROD as part of this VAPT preparation.
-- Administrative API operations and any unrelated internal endpoints are out of scope unless the system owner and VAPT coordinator explicitly approve them in writing. Their presence in source code is not authorization to test them.
+- Admin User Maintenance and Admin Schedule Maintenance UI and API management operations have been removed from this public repository.
+- The read-only `GET /api/VesselVisits` endpoint remains because public booking route selection depends on schedule data.
+- Do not reintroduce admin maintenance operations into this public snapshot. If needed, maintain them only in the private repository and confirm release-specific behavior with the system owner.
+- Unrelated internal endpoints remain out of scope unless the system owner and VAPT coordinator explicitly approve them in writing.
 - Email Notification Service is excluded from this test engagement.
 - The public repository's payment flow is a demo/testing flow, not a live production payment gateway. Do not initiate real-money transactions.
 - Infrastructure components such as WAF, IDS/IPS, CDN, reverse proxy, load balancer, and special access controls are not confirmed by this repository; the environment owner must confirm their presence and whether they are in scope.
@@ -73,7 +74,7 @@ For each finding, record the target environment, timestamp/timezone, affected pa
 - [ ] VAPT coordinator confirms written authorization, scope, source IPs, testing window, and escalation contacts.
 - [ ] Approved test accounts are delivered privately to the VAPT team.
 - [ ] VAPT team confirms the 11-page baseline matches the environment being tested.
-- [ ] Admin User Maintenance and Admin Schedule Maintenance remain excluded and are not deployed/enabled in UAT or PROD.
+- [ ] Confirm the UAT/PROD release matches this public snapshot's removal of admin maintenance UI and API operations.
 - [ ] Frontend/backend build and automated test results are recorded from a clean checkout of this repository.
 - [ ] Dependency and source security checks are run and their output reviewed.
 - [ ] Environment owner confirms relevant infrastructure protections and access restrictions.

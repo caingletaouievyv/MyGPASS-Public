@@ -4,7 +4,6 @@ using MyGPASS.Api.Data;
 using MyGPASS.Api.DTOs.Auth;
 using MyGPASS.Api.DTOs.Users;
 using MyGPASS.Api.Models;
-using MyGPASS.Api.Security;
 using MyGPASS.Api.Services.Interfaces;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Data.SqlClient;
@@ -66,7 +65,6 @@ public class AuthService : IAuthService
             Email = email,
             IsActive = true,
             IsEmailVerified = false,
-            Role = Roles.User,
             CreatedAt = DateTime.UtcNow,
             UpdatedAt = DateTime.UtcNow
         };
@@ -125,7 +123,7 @@ public class AuthService : IAuthService
             Email = user.Email,
             IsActive = user.IsActive,
             IsEmailVerified = user.IsEmailVerified,
-            Role = user.Role,
+            Role = "User",
             CreatedAt = user.CreatedAt,
             UpdatedAt = user.UpdatedAt
         };
@@ -174,7 +172,6 @@ public class AuthService : IAuthService
             new(ClaimTypes.NameIdentifier, user.UserId.ToString()),
             new(ClaimTypes.Name, user.Email ?? user.MobileNumber),
             new(ClaimTypes.Email, user.Email ?? string.Empty),
-            new(ClaimTypes.Role, user.Role),
             new("firstName", user.FirstName),
             new("lastName", user.LastName),
             new(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
