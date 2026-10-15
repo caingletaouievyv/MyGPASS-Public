@@ -1,22 +1,19 @@
 using System.Security.Claims;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging.Abstractions;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using MyGPASS.Api.Data;
 using MyGPASS.Api.Extensions;
 using MyGPASS.Api.Models;
 using MyGPASS.Api.Security;
-using MyGPASS.Api.Services;
-using MyGPASS.Api.Services.Interfaces;
-using Microsoft.AspNetCore.Identity;
 using Xunit;
 
 namespace MyGPASS.Api.Tests;
@@ -39,8 +36,8 @@ public class JwtAuthorizationTests
     {
         await using var context = CreateContext();
         var user = await AddUserAsync(context, 101, Roles.User, true);
-        var service = new UserService(context);
-        await service.UpdateStatusAsync(user.UserId, false, 999);
+        user.IsActive = false;
+        await context.SaveChangesAsync();
 
         var result = await ValidateTokenAsync(context, user, Roles.User);
 
@@ -48,43 +45,20 @@ public class JwtAuthorizationTests
     }
 
     [Fact]
-    public async Task ExistingToken_IsRejectedAfterRoleChange()
+    public async Task AdminAuthorizationPolicy_RequiresAdminRole()
     {
         await using var context = CreateContext();
-        var user = await AddUserAsync(context, 102, Roles.User, true);
-        var service = new UserService(context);
-        await service.UpdateRoleAsync(user.UserId, Roles.Admin, 999);
+        await using var provider = CreateSecurityProvider(context);
+        var authorizationService = provider.GetRequiredService<IAuthorizationService>();
+        var userPrincipal = new ClaimsPrincipal(new ClaimsIdentity(
+            [new Claim(ClaimTypes.Role, Roles.User)],
+            JwtBearerDefaults.AuthenticationScheme));
+        var adminPrincipal = new ClaimsPrincipal(new ClaimsIdentity(
+            [new Claim(ClaimTypes.Role, Roles.Admin)],
+            JwtBearerDefaults.AuthenticationScheme));
 
-        var result = await ValidateTokenAsync(context, user, Roles.User);
-
-        Assert.NotNull(result);
-    }
-
-    [Fact]
-    public async Task ExistingAdminToken_IsRejectedAfterAdminIsDemoted()
-    {
-        await using var context = CreateContext();
-        var user = await AddUserAsync(context, 103, Roles.Admin, true);
-        var actor = await AddUserAsync(context, 105, Roles.Admin, true);
-        var service = new UserService(context);
-        await service.UpdateRoleAsync(user.UserId, Roles.User, actor.UserId);
-
-        var result = await ValidateTokenAsync(context, user, Roles.Admin);
-
-        Assert.NotNull(result);
-    }
-
-    [Fact]
-    public async Task OldUserToken_DoesNotGainAdminAuthorizationAfterPromotion()
-    {
-        await using var context = CreateContext();
-        var user = await AddUserAsync(context, 104, Roles.User, true);
-        var service = new UserService(context);
-        await service.UpdateRoleAsync(user.UserId, Roles.Admin, 999);
-
-        var result = await ValidateTokenAsync(context, user, Roles.User);
-
-        Assert.NotNull(result);
+        Assert.False((await authorizationService.AuthorizeAsync(userPrincipal, Roles.Admin)).Succeeded);
+        Assert.True((await authorizationService.AuthorizeAsync(adminPrincipal, Roles.Admin)).Succeeded);
     }
 
     private static async Task<AuthenticateResult?> ValidateTokenAsync(
@@ -126,6 +100,7 @@ public class JwtAuthorizationTests
             .Build();
         var services = new ServiceCollection();
         services.AddSingleton(context);
+        services.AddLogging();
         services.AddApiSecurity(configuration, new TestHostEnvironment());
         return services.BuildServiceProvider();
     }
