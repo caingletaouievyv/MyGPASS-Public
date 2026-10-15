@@ -2,6 +2,7 @@ using MyGPASS.Api.Data;
 using MyGPASS.Api.DTOs.Auth;
 using MyGPASS.Api.Models;
 using MyGPASS.Api.Models.Schedule;
+using MyGPASS.Api.Security;
 using MyGPASS.Api.Services;
 using MyGPASS.Api.Services.Interfaces;
 using Microsoft.AspNetCore.Identity;
