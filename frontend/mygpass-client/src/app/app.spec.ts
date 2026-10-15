@@ -4,9 +4,6 @@ import { provideRouter, Router } from '@angular/router';
 
 import { App } from './app';
 import { routes } from './app.routes';
-import { AdminSchedulesComponent } from './features/admin/admin-schedules.component';
-import { AdminUsersComponent } from './features/admin/admin-users.component';
-import { adminGuard } from './features/auth/auth.guard';
 
 describe('App', () => {
   beforeEach(async () => {
@@ -60,24 +57,8 @@ describe('App', () => {
     ]);
   });
 
-  it('registers admin routes and protects each page with adminGuard', () => {
-    const adminRoute = routes.find((route) => route.path === 'admin');
-
-    expect(adminRoute).toBeDefined();
-    expect(adminRoute?.children).toEqual(
-      expect.arrayContaining([
-        expect.objectContaining({
-          path: 'users',
-          component: AdminUsersComponent,
-          canActivate: [adminGuard]
-        }),
-        expect.objectContaining({
-          path: 'schedules',
-          component: AdminSchedulesComponent,
-          canActivate: [adminGuard]
-        })
-      ])
-    );
+  it('excludes admin maintenance routes from the public VAPT snapshot', () => {
+    expect(routes.some((route) => route.path === 'admin')).toBe(false);
   });
 
   it('should render the registration route', async () => {
@@ -107,7 +88,8 @@ describe('App', () => {
       expect(app.isAppReady()).toBeFalsy();
       const loadingLogo = fixture.nativeElement.querySelector('.loading-logo');
       expect(loadingLogo).not.toBeNull();
-      expect(loadingLogo.getAttribute('alt')).toBe('GPASS');
+      expect(loadingLogo.tagName).toBe('SPAN');
+      expect(loadingLogo.textContent).toBe('MyGPASS');
 
       if (document.readyState !== 'complete') {
         window.dispatchEvent(new Event('load'));
