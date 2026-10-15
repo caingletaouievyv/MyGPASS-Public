@@ -88,7 +88,8 @@ describe('App', () => {
       expect(app.isAppReady()).toBeFalsy();
       const loadingLogo = fixture.nativeElement.querySelector('.loading-logo');
       expect(loadingLogo).not.toBeNull();
-      expect(loadingLogo.getAttribute('alt')).toBe('GPASS');
+      expect(loadingLogo.tagName).toBe('SPAN');
+      expect(loadingLogo.textContent).toBe('MyGPASS');
 
       if (document.readyState !== 'complete') {
         window.dispatchEvent(new Event('load'));
