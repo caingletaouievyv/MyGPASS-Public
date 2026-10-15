@@ -11,7 +11,6 @@ public static class ServiceCollectionExtensions
     {
         services.AddScoped<IApplicationSettingsService, ApplicationSettingsService>();
         services.AddScoped<IPasswordHasher<User>, PasswordHasher<User>>();
-        services.AddScoped<IUserService, UserService>();
         services.AddScoped<IEmailService, EmailService>();
         services.AddScoped<IAuthService, AuthService>();
         services.AddScoped<IBookingService, BookingService>();

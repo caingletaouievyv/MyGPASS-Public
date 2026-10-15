@@ -8,7 +8,7 @@ MyGPASS provides a user-facing flow for searching routes, creating passenger boo
 
 **Live demo:** Coming soon
 
-The public repository is intended to provide a clean, runnable demonstration of the MyGPASS user-facing application. The frontend routes and navigation in this VAPT-preparation branch are limited to the agreed user-facing 11-page scope
+The public repository is a clean, runnable snapshot of the agreed 11-page user-facing MyGPASS application. Admin User Maintenance and Admin Schedule Maintenance UI and API management operations are removed from this public snapshot. The read-only schedule endpoint required for booking route selection remains.
 
 > **Demo/payment note:** Payment functionality in the public project is for demonstration/testing purposes. It does not represent a live production payment gateway or real-money transaction.
 
