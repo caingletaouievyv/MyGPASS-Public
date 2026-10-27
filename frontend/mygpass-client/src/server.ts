@@ -18,7 +18,7 @@ const contentSecurityPolicy = (nonce: string) =>
     `style-src 'self' 'nonce-${nonce}'`,
     "img-src 'self' data:",
     "font-src 'self'",
-    "connect-src 'self' https://gti-gpass-api.globalports.com.ph",
+    "connect-src 'self' https://localhost:5001",
     "object-src 'none'",
     "base-uri 'self'",
     "form-action 'self'",
