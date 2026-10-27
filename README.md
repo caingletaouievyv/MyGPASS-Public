@@ -111,6 +111,10 @@ MyGPASS/
 
 The public repository focuses on the user-facing application. Private/internal implementation details are intentionally excluded.
 
+## Security hardening status
+
+- [Public security hardening and validation gates](docs/SECURITY_HARDENING.md) — changes ported from private MyGPASS and the remaining independent validation required before any VAPT claim.
+
 ## VAPT preparation
 
 - [11-page VAPT scope checklist](docs/VAPT_CHECKLIST.md) — scope, exclusions, readiness gates, and secure test-account handling.

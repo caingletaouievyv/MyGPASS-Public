@@ -3,8 +3,10 @@ using MyGPASS.Api.Middleware;
 using MyGPASS.Api.Configuration;
 
 var builder = WebApplication.CreateBuilder(args);
+builder.WebHost.ConfigureKestrel(options => options.AddServerHeader = false);
 
 builder.Services.AddProblemDetails();
+builder.Services.AddHsts(options => options.MaxAge = TimeSpan.FromDays(365));
 builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
 builder.Services.AddOpenApi();
 builder.Services.AddControllers();
@@ -28,6 +30,11 @@ app.UseHttpsRedirection();
 app.UseApiCors();
 app.UseRateLimiter();
 app.UseApiSecurity();
+app.Use(async (context, next) =>
+{
+    context.Response.Headers.Remove("X-Powered-By");
+    await next();
+});
 
 if (app.Environment.IsDevelopment())
 {
