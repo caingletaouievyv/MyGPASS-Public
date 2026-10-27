@@ -58,7 +58,7 @@ async function assertSecuredHtml(path) {
   assert.match(policy, /frame-ancestors 'none'/);
   assert.match(
     policy,
-    /connect-src 'self' https:\/\/localhost\\.5001/,
+    /connect-src 'self' https:\/\/localhost:5001/,
   );
   assert.doesNotMatch(policy, /'unsafe-inline'|\*/);
 
