@@ -4,8 +4,6 @@ A full-stack passenger booking system built with Angular, ASP.NET Core, and SQL 
 
 MyGPASS provides a user-facing flow for searching routes, creating passenger bookings, managing account access, completing payment steps, and accessing digital passes.
 
-> **Repository synchronization (October 26, 2026):** The private repository, [MyGPASS](https://github.com/caingletaouievyv/MyGPASS), is the implementation source of truth. This public repository is a curated, sanitized snapshot—not an automatic or commit-for-commit mirror. Keep user-facing behavior and safe documentation aligned when changes are intentionally published, but do not copy private admin features, credentials, internal URLs, database details, or deployment configuration. Private-only dependency and VAPT work is not automatically present in this repository; verify this repository's own code and test results before claiming it includes those changes.
-
 ## Demo
 
 **Live demo:** Coming soon
@@ -110,10 +108,6 @@ MyGPASS/
 ```
 
 The public repository focuses on the user-facing application. Private/internal implementation details are intentionally excluded.
-
-## Security hardening status
-
-- [Public security hardening and validation gates](docs/SECURITY_HARDENING.md) — changes ported from private MyGPASS and the remaining independent validation required before any VAPT claim.
 
 ## VAPT preparation
 
