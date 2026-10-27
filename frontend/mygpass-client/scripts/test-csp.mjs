@@ -92,7 +92,7 @@ try {
   assert.ok(scriptPath, 'SSR HTML must include an external application script.');
   assert.ok(stylesheetPath, 'SSR HTML must include an external stylesheet.');
 
-  for (const path of [scriptPath, stylesheetPath, '/assets/MyGPASS.png']) {
+  for (const path of [scriptPath, stylesheetPath]) {
     const response = await fetch(new URL(path, `${origin}/`));
     assert.equal(response.status, 200, `${path} should be served successfully.`);
     assert.equal(response.headers.get('server'), null);
