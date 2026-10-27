@@ -5,17 +5,37 @@ import {
   writeResponseToNodeResponse,
 } from '@angular/ssr/node';
 import express from 'express';
+import { randomBytes } from 'node:crypto';
 import { join } from 'node:path';
 
+import { addHtmlNonces } from './csp-html';
+
 const browserDistFolder = join(import.meta.dirname, '../browser');
+const contentSecurityPolicy = (nonce: string) =>
+  [
+    "default-src 'self'",
+    `script-src 'self' 'nonce-${nonce}'`,
+    `style-src 'self' 'nonce-${nonce}'`,
+    "img-src 'self' data:",
+    "font-src 'self'",
+    "connect-src 'self' https://localhost:5001",
+    "object-src 'none'",
+    "base-uri 'self'",
+    "form-action 'self'",
+    "frame-ancestors 'none'",
+  ].join('; ');
 
 const app = express();
+app.disable('x-powered-by');
 const angularApp = new AngularNodeAppEngine();
 
-app.use((_req, res, next) => {
+app.use((req, res, next) => {
   res.setHeader('X-Content-Type-Options', 'nosniff');
   res.setHeader('X-Frame-Options', 'DENY');
   res.setHeader('Referrer-Policy', 'no-referrer');
+  if (req.secure) {
+    res.setHeader('Strict-Transport-Security', 'max-age=31536000');
+  }
   next();
 });
 
@@ -46,12 +66,50 @@ app.use(
  * Handle all other requests by rendering the Angular application.
  */
 app.use((req, res, next) => {
+  const nonce = randomBytes(16).toString('base64');
   angularApp
     .handle(req)
-    .then((response) =>
-      response ? writeResponseToNodeResponse(response, res) : next(),
-    )
+    .then(async (response) => {
+      if (!response) {
+        next();
+        return;
+      }
+
+      if (response.headers.get('content-type')?.includes('text/html')) {
+        const html = addHtmlNonces(await response.text(), nonce);
+        const headers = new Headers(response.headers);
+        headers.delete('content-length');
+        headers.delete('content-encoding');
+        headers.delete('etag');
+        headers.delete('content-security-policy-report-only');
+        headers.set('content-security-policy', contentSecurityPolicy(nonce));
+        headers.set('cache-control', 'no-store');
+
+        response = new Response(html, {
+          status: response.status,
+          statusText: response.statusText,
+          headers,
+        });
+      }
+
+      await writeResponseToNodeResponse(response, res);
+    })
     .catch(next);
+});
+
+app.use((
+  error: unknown,
+  _req: express.Request,
+  res: express.Response,
+  next: express.NextFunction,
+) => {
+  if (res.headersSent) {
+    next(error);
+    return;
+  }
+
+  console.error('Angular SSR request failed.', error);
+  res.status(500).type('text/plain').send('Internal Server Error');
 });
 
 /**
