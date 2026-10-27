@@ -1,12 +1,22 @@
+using Microsoft.AspNetCore.HttpsPolicy;
+using Microsoft.Extensions.Options;
+
 namespace MyGPASS.Api.Middleware;
 
 public sealed class SecurityHeadersMiddleware
 {
     private readonly RequestDelegate _next;
+    private readonly IHostEnvironment _environment;
+    private readonly HstsOptions _hstsOptions;
 
-    public SecurityHeadersMiddleware(RequestDelegate next)
+    public SecurityHeadersMiddleware(
+        RequestDelegate next,
+        IHostEnvironment environment,
+        IOptions<HstsOptions> hstsOptions)
     {
         _next = next;
+        _environment = environment;
+        _hstsOptions = hstsOptions.Value;
     }
 
     public Task InvokeAsync(HttpContext context)
@@ -21,6 +31,18 @@ public sealed class SecurityHeadersMiddleware
             headers["Cache-Control"] = "no-store";
             headers.Remove("Server");
             headers.Remove("X-Powered-By");
+
+            if (!_environment.IsDevelopment() &&
+                context.Request.IsHttps &&
+                context.Response.StatusCode >= StatusCodes.Status500InternalServerError &&
+                !_hstsOptions.ExcludedHosts.Contains(
+                    context.Request.Host.Host,
+                    StringComparer.OrdinalIgnoreCase))
+            {
+                var maxAgeSeconds = (long)_hstsOptions.MaxAge.TotalSeconds;
+                headers["Strict-Transport-Security"] = $"max-age={maxAgeSeconds}";
+            }
+
             return Task.CompletedTask;
         });
 
