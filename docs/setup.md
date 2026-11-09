@@ -117,7 +117,7 @@ The public repository focuses on the user-facing application. Private and intern
 The public app opens on Login. There is no separate landing page. The implemented routes are Login, Register, Forgot Password, Reset Password, Verify Email, Booking Route, Booking Details, Payment, Pass, Account, and History.
 
 1. **Route** (`/booking/route`) — choose an origin port on the schematic map, then choose Passenger Terminal Fee. RORO Terminal Fee is shown and disabled.
-2. **Details** (`/booking/details`) — choose the destination, shipping line, departure date, and departure time, and enter the number of passengers. Passenger names are not collected on a separate screen. The order summary is on this page.
+2. **Details** (`/booking/details`) — choose the destination, shipping line, departure date, and departure time, and enter the number of passengers. Passenger names are not collected on a separate screen. The order summary is on this page. When a user changes the Origin or Destination port, the Shipping Line, Day of Departure, and Estimated Time of Departure fields are reset — they were based on the previous route. Passenger count stays unchanged.
 3. **Payment** (`/booking/payment`) — complete the demo payment confirmation. This is not a live payment.
 4. **Pass** (`/booking/pass`) — open the passenger pass and QR code.
 5. **Account / History** — review the signed-in account and previous bookings.
@@ -162,7 +162,7 @@ No credentials, secrets, private infrastructure details, or internal production 
 
 ## VAPT preparation
 
-The public project includes VAPT-oriented hardening. That is not a VAPT certificate and it is not authorization to test a private environment. Temporary VAPT handoff documents are not part of this public snapshot.
+The public project includes VAPT-oriented hardening: JWT validation, configured CORS, rate limiting, security headers, production-safe error handling, and dependency vulnerability scanning. A baseline VAPT assessment was completed by an external security firm (Oct 15–26, 2026). This documents the assessment cycle. It is not a VAPT compliance or certification claim, and it is not authorization to test a private environment. Temporary VAPT handoff documents are not part of this public snapshot.
 
 ## Testing
 
