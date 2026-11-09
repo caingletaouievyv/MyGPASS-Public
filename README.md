@@ -2,7 +2,7 @@
 
 Full-stack passenger booking system built with **Angular 22** and **ASP.NET Core 10**. Features JWT authentication, guest booking with secure access tokens, digital QR passes, and a demo payment flow.
 
-**Live:** Coming soon
+**Live:** [https://gpass.globalports.com.ph/login](https://gpass.globalports.com.ph/login)
 
 ---
 
@@ -12,19 +12,19 @@ Full-stack passenger booking system built with **Angular 22** and **ASP.NET Core
 
 | Feature | GIF | Steps |
 |--------|-----|-------|
-| **Guest booking** | ![Guest booking](docs/demo/guest-booking.gif) | Continue as Guest → select route on map → booking details → demo payment → pass with QR. |
-| **Registered booking** | ![Registered booking](docs/demo/registered-booking.gif) | Register → login → route selection → details → payment → pass → view bookings. |
-| **Route selection** | ![Route selection](docs/demo/route-selection.gif) | Click a port on the schematic Philippine map → choose terminal fee → proceed. |
-| **Pass / QR** | ![Pass/QR](docs/demo/pass-qr.gif) | One QR per passenger → download → view bookings (registered) or guest access. |
+| **Guest booking** | ![Guest booking](docs/demo/Guestbooking.gif) | Continue as Guest → select route on map → booking details → demo payment → pass with QR. |
+| **Registered booking** | ![Registered booking](docs/demo/RegisteredBooking.gif) | Register → login → route selection → details → payment → pass → view bookings. |
+| **Route selection** | ![Route selection](docs/demo/RouteSelection.gif) | Click a port on the schematic Philippine map → choose terminal fee → proceed. |
+| **Pass / QR** | ![Pass/QR](docs/demo/PassQR.gif) | One QR per passenger → download → view bookings (registered) or guest access. |
 
 ### Core features
 
 | Feature | GIF | Steps |
 |--------|-----|-------|
-| **Auth** | ![Auth](docs/demo/auth.gif) | Register → Login → Account/History. Forgot password + email verification. |
-| **Booking details** | ![Booking details](docs/demo/booking-details.gif) | Shipping line, day of departure, ETD, passenger count. Route changes invalidate dependent selections. |
-| **Payment (demo)** | ![Payment](docs/demo/payment.gif) | Demo confirmation → ₱31.00 total → pass with QR per passenger. |
-| **Responsive UI** | ![Responsive](docs/demo/responsive.gif) | Mobile-friendly across all pages. |
+| **Auth** | ![Auth](docs/demo/Auth.gif) | Register → Login → Account/History. Forgot password + email verification. |
+| **Booking details** | ![Booking details](docs/demo/BookingDetails.gif) | Shipping line, day of departure, ETD, passenger count. When a user changes the Origin or Destination port, the Shipping Line, Day of Departure, and Estimated Time of Departure fields are reset — they were based on the previous route. Passenger count stays unchanged. |
+| **Payment (demo)** | ![Payment](docs/demo/Payment.gif) | Demo confirmation → ₱31.00 total → pass with QR per passenger. |
+| **Responsive UI** | ![Responsive](docs/demo/ResponsiveUI.gif) | Mobile-friendly across all pages. |
 
 Full test checklist: [docs/setup.md](docs/setup.md)
 
@@ -83,7 +83,15 @@ MyGPASS-Public/
 - **Security:** JWT validation, configured CORS, rate limiting, security headers (CSP, HSTS, X-Frame-Options), production-safe error handling, dependency vulnerability scanning (0 npm vulnerabilities)
 - **Testing:** 75 frontend tests (Vitest) + 58 backend tests (.NET), production build passing
 - **Database:** SQL Server / Azure SQL with versioned migration scripts (no EF migrations)
-- **VAPT:** VAPT-oriented hardening (not certification). See [docs/setup.md](docs/setup.md).
+- **VAPT:** VAPT-oriented hardening applied (JWT validation, CORS, rate limiting, security headers, dependency scanning). Baseline VAPT assessment completed by an external firm (Oct 2026). This is not a VAPT compliance or certification claim.
+
+---
+
+## Security & VAPT
+
+- VAPT-oriented hardening: JWT validation, configured CORS, rate limiting, security headers (CSP, HSTS, X-Frame-Options), production-safe error handling, dependency vulnerability scanning (0 npm vulnerabilities).
+- Baseline VAPT assessment completed by an external security firm (Oct 15–26, 2026). This documents the assessment cycle — not a VAPT compliance or certification claim.
+- Demo payment only; real GCash production integration is not active.
 
 ---
 
