@@ -662,7 +662,7 @@ export class HistoryComponent {
   downloadQRCodes(booking: BookingHistoryItem): void {
     this.http.get<QRCodeResponse[]>(`${this.apiBaseUrl}/api/QRCodes/booking/${booking.bookingId}`).subscribe({
       next: (qrCodes) => void this.downloadQRCodeImages(qrCodes ?? []),
-      error: (_error: HttpErrorResponse) => console.error('Unable to download the booking QR code.')
+      error: (_error: HttpErrorResponse) => console.error('Unable to download the Globalport QR code.')
     });
   }
 
@@ -672,12 +672,12 @@ export class HistoryComponent {
         const imageUrl = await this.createQRCodeImage(qrCode);
         const link = document.createElement('a');
         link.href = imageUrl;
-        link.download = `booking-passenger-${qrCode.passengerNumber}-qr.png`;
+        link.download = `globalport-passenger-${qrCode.passengerNumber}-qr.png`;
         document.body.appendChild(link);
         link.click();
         link.remove();
       } catch {
-        console.error('Unable to download the booking QR code.');
+        console.error('Unable to download the Globalport QR code.');
       }
     }
   }

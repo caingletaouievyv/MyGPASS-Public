@@ -26,9 +26,9 @@ interface QRCodeResponse {
   template: `
     <main class="confirmation-page" aria-live="polite">
       <section class="confirmation-shell" aria-labelledby="confirmation-title">
-        <p class="eyebrow">Booking</p>
+        <p class="eyebrow">Globalport</p>
         <h1 id="confirmation-title">Booking confirmed</h1>
-        <p class="intro">Your demo payment is complete.</p>
+        <p class="intro">Your payment demo has returned you to Globalport.</p>
 
         @if (isLoading()) {
           <p class="status-message">Loading your pass...</p>
@@ -49,7 +49,7 @@ interface QRCodeResponse {
                   </button>
                   <div class="qr-stage">
                     @if (qrCodeImages()[qrCode.qrCodeId]) {
-                      <img class="qr-code" [src]="qrCodeImages()[qrCode.qrCodeId]" alt="Booking QR code" />
+                      <img class="qr-code" [src]="qrCodeImages()[qrCode.qrCodeId]" alt="Globalport pass QR code" />
                     }
                   </div>
                   <button type="button" (click)="showNextPassenger()" [disabled]="currentPassengerIndex() === qrCodes().length - 1">
@@ -58,7 +58,7 @@ interface QRCodeResponse {
                 </div>
                 <div class="pass-pagination-status">Passenger {{ currentPassengerIndex() + 1 }} of {{ qrCodes().length }}</div>
               } @else if (qrCodeImages()[qrCode.qrCodeId]) {
-                <img class="qr-code" [src]="qrCodeImages()[qrCode.qrCodeId]" alt="Booking QR code" />
+                <img class="qr-code" [src]="qrCodeImages()[qrCode.qrCodeId]" alt="Globalport pass QR code" />
               }
               <div class="pass-details">
                 <div><span>Route</span><strong>{{ origin || 'Unavailable' }} <span aria-hidden="true">→</span> {{ destination || 'Unavailable' }}</strong></div>
@@ -485,7 +485,7 @@ export class BookingConfirmationComponent {
       const imageUrl = await this.createQRCodeImage(qrCode);
       this.qrCodeImages.update((images) => ({ ...images, [qrCode.qrCodeId]: imageUrl }));
     } catch {
-      console.error('Unable to render the booking QR code.');
+      console.error('Unable to render the Globalport QR code.');
     }
   }
 
@@ -506,14 +506,14 @@ export class BookingConfirmationComponent {
           imageUrl = await this.createQRCodeImage(qrCode);
           this.qrCodeImages.update((images) => ({ ...images, [qrCode.qrCodeId]: imageUrl }));
         } catch {
-          console.error('Unable to download the booking QR code.');
+          console.error('Unable to download the Globalport QR code.');
           continue;
         }
       }
 
       const link = document.createElement('a');
       link.href = imageUrl;
-      link.download = `booking-passenger-${qrCode.passengerNumber}-qr.png`;
+      link.download = `globalport-passenger-${qrCode.passengerNumber}-qr.png`;
       document.body.appendChild(link);
       link.click();
       link.remove();

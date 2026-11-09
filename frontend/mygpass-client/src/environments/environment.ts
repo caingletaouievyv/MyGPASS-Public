@@ -1,4 +1,5 @@
 export const environment = {
   production: true,
-  apiBaseUrl: 'https://localhost:5001'
+  // Same-origin /api. Local development still proxies port 5000.
+  apiBaseUrl: ''
 };

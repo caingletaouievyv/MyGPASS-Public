@@ -12,10 +12,72 @@ The public repository is a clean, runnable snapshot of the agreed 11-page user-f
 
 > **Demo/payment note:** Payment functionality in the public project is for demonstration/testing purposes. It does not represent a live production payment gateway or real-money transaction.
 
+## Local Demo Setup
+
+This uses a separate local database and fictional schedule data. It does not call a private API, use production credentials, or take a real payment.
+
+### Prerequisites
+
+- Node.js and npm
+- .NET 10 SDK
+- SQL Server LocalDB (`MSSQLLocalDB`)
+
+### Database
+
+Create an empty database named `MyGPASS_Public_Development` on LocalDB. From the `backend` directory, apply schema scripts `001` through `007`, then `009`, and then the fictional seed:
+
+```powershell
+sqlcmd -S "(localdb)\MSSQLLocalDB" -E -b -Q "IF DB_ID(N'MyGPASS_Public_Development') IS NULL CREATE DATABASE MyGPASS_Public_Development;"
+$scripts = @(
+    "001_initial_schema.sql",
+    "002_email_verification_and_password_reset.sql",
+    "003_booking_departure_datetime.sql",
+    "004_qr_code_expiration.sql",
+    "005_qr_codes_per_passenger.sql",
+    "006_guest_bookings.sql",
+    "007_application_settings.sql",
+    "009_unique_users_email.sql"
+)
+foreach ($name in $scripts) {
+    sqlcmd -I -S "(localdb)\MSSQLLocalDB" -d MyGPASS_Public_Development -E -b -i "../database/schema/$name"
+    if ($LASTEXITCODE -ne 0) { throw "Failed to apply $name" }
+}
+sqlcmd -S "(localdb)\MSSQLLocalDB" -d MyGPASS_Public_Development -E -b -i ../database/seeds/schedule_seed.example.sql
+```
+
+The seed inserts Demo Port A, Demo Port B, Example Shipping Line, Demo Vessel, and one Daily 12:00 visit. Pass `-I` to `sqlcmd` so the filtered guest-booking index in script `006` is created with `QUOTED_IDENTIFIER` on.
+
+### Ignored API settings
+
+Copy the example settings to the gitignored development file and point `ConnectionStrings:GPassDb` at `MyGPASS_Public_Development` on `(localdb)\MSSQLLocalDB` with Windows authentication. Do not commit that file. Leave every GCash value empty.
+
+### Run
+
+```powershell
+dotnet build "backend\MyGPASS.Api\MyGPASS.Api.csproj" --nologo
+dotnet run --launch-profile http --project "backend\MyGPASS.Api\MyGPASS.Api.csproj"
+```
+
+The HTTP profile listens on `http://localhost:5000`. In another terminal:
+
+```powershell
+cd frontend/mygpass-client
+npm ci
+npm start
+```
+
+Open `http://localhost:4200`. Development keeps an empty API base URL, and `proxy.conf.json` forwards `/api` to `http://localhost:5000`.
+
+### Verify
+
+`GET http://localhost:5000/api/ports` returns Demo Port A and Demo Port B.
+
+The route map still shows its built-in origin names. The seeded ports are not pins on that map. Open `http://localhost:4200/booking/details?origin=Demo%20Port%20A` to load Demo Port A, choose Demo Port B, Example Shipping Line, a departure date, and 12:00 PM, then use the demo payment page. One QR is created per passenger. The payment step is a local demo confirmation only.
+
 ## Features
 
 - Passenger route and schedule selection
-- Booking details and passenger information
+- Booking details, including the passenger count
 - Guest booking access
 - Account registration and authentication
 - Email verification and password reset flows
@@ -30,11 +92,13 @@ The public repository is a clean, runnable snapshot of the agreed 11-page user-f
 
 The main user journey follows this general flow:
 
-1. **Route** — select the travel route and schedule.
-2. **Details** — provide passenger and booking information.
-3. **Payment** — complete the available payment/demo confirmation step.
-4. **Pass** — access the generated passenger pass and QR code.
-5. **Account / History** — review account information and previous bookings.
+The public app opens on Login. There is no separate landing page. The implemented routes are Login, Register, Forgot Password, Reset Password, Verify Email, Booking Route, Booking Details, Payment, Pass, Account, and History.
+
+1. **Route** (`/booking/route`) — choose an origin port on the schematic map, then choose Passenger Terminal Fee. RORO Terminal Fee is shown and disabled.
+2. **Details** (`/booking/details`) — choose the destination, shipping line, departure date, and departure time, and enter the number of passengers. Passenger names are not collected on a separate screen. The order summary is on this page.
+3. **Payment** (`/booking/payment`) — complete the demo payment confirmation. This is not a live payment.
+4. **Pass** (`/booking/pass`) — open the passenger pass and QR code.
+5. **Account / History** — review the signed-in account and previous bookings.
 
 Guest bookings can also be accessed through a protected guest-access mechanism without requiring a registered account.
 
@@ -111,10 +175,7 @@ The public repository focuses on the user-facing application. Private/internal i
 
 ## VAPT preparation
 
-- [11-page VAPT scope checklist](docs/VAPT_CHECKLIST.md) — scope, exclusions, readiness gates, and secure test-account handling.
-- [VAPT handoff and validation runbook](docs/VAPT_HANDOFF.md) — build, test, dependency-audit, and evidence-recording commands.
-
-The checklist intentionally does not publish UAT/PROD URLs or test credentials. Obtain those from the authorized environment owner through the approved channel. The presence of source code or an API endpoint is not authorization to test it. Build, automated-test, and security-audit results must be recorded before claiming validation; this repository has not been certified VAPT-passed by these documents.
+The temporary VAPT handoff documents are not part of this public snapshot. Do not treat this repository as a VAPT certificate or as authorization to test a private environment.
 
 ## Local Development
 
@@ -180,10 +241,10 @@ Screenshots and a hosted demo will be added as the public demo is prepared.
 
 Suggested showcase areas:
 
-- Landing / home screen
+- Login and registration
 - Route selection
-- Booking details
-- Payment/demo confirmation
+- Booking details and order summary
+- Payment demo confirmation
 - Digital passenger pass
 - Account and booking history
 

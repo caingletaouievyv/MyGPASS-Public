@@ -1,75 +1,102 @@
 # MyGPASS Backend
 
-ASP.NET Core Web API for the MyGPASS application. The API uses EF Core with SQL Server and retains the existing authentication, booking, administration, payment, email, and QR-code flows.
+ASP.NET Core Web API for the public MyGPASS demo. The API uses EF Core with SQL Server for authentication, booking, demo payment confirmation, email, and QR-code flows.
+
+This public snapshot does not include Admin User Maintenance or Admin Schedule Maintenance. Payment confirmation is a demo flow. GCash settings stay empty, and this source does not call a live GCash gateway.
 
 ## Requirements
 
 - .NET 10 SDK (the projects target `net10.0`)
 - SQL Server 2019 or later, such as SQL Server Developer or Express, running locally
-- A SQL Server login or Windows account permitted to create/use the development database
+- A SQL Server login or Windows account permitted to create and use the local development database
 
 ## Configure a local API
 
-From this directory, create an ignored local settings file from the safe template:
+From this `backend` directory, copy the tracked example to the gitignored development settings file:
 
 ```powershell
 Copy-Item MyGPASS.Api/appsettings.example.json MyGPASS.Api/appsettings.Development.json
 ```
 
-The example connection string uses Windows authentication and a local SQL Server at `localhost`. Edit the ignored `appsettings.Development.json` to match your local SQL Server instance, or supply the connection string with User Secrets:
+The example connection string uses Windows authentication and a local SQL Server database named `MyGPASS_Development`. Edit `MyGPASS.Api/appsettings.Development.json` if your instance differs, or set the connection string with User Secrets:
 
 ```powershell
 dotnet user-secrets set "ConnectionStrings:GPassDb" "Server=localhost;Database=MyGPASS_Development;Trusted_Connection=True;TrustServerCertificate=True;MultipleActiveResultSets=true" --project MyGPASS.Api
 ```
 
-Do not put real credentials in tracked files. User Secrets or environment variables can override the example settings. The `Jwt:SigningKey` is generated randomly for a development run when omitted; to keep local tokens valid between restarts, provide a private key of at least 32 bytes:
+Do not put real credentials in tracked files. User Secrets or environment variables can override the example settings. In Development, `Jwt:SigningKey` is generated randomly for that run when it is omitted. To keep local tokens valid between restarts, set a private key of at least 32 bytes:
 
 ```powershell
 dotnet user-secrets set "Jwt:SigningKey" "<your-random-secret-of-at-least-32-bytes>" --project MyGPASS.Api
 ```
 
-Production startup requires `Jwt:SigningKey` to be configured. Never reuse the example or a test signing key in a deployed environment.
+Production startup requires `Jwt:SigningKey`. Never reuse an example or test signing key in a deployed environment.
 
-The local CORS origins and frontend URL in the example are `http://localhost:4200` and `http://127.0.0.1:4200`. Change them only to origins you control. SMTP settings are blank, so email verification and password reset emails are not delivered until a developer configures SMTP through local settings, User Secrets, environment variables, or the `ApplicationSettings` table. The existing demo payment confirmation flow remains available. GCash options are retained as empty configuration placeholders, but this source does not include a live GCash gateway client.
+The example CORS origins and frontend URL are `http://localhost:4200` and `http://127.0.0.1:4200`. Change them only to origins you control. Leave every GCash value empty. Use the fictional schedule seed below, not data from a private system.
 
 ## Create the database
 
-The versioned SQL scripts in `../database/schema` are the authoritative database setup workflow. Create an empty local database named `MyGPASS_Development`, configure the `GPassDb` connection string, and apply the scripts once in numeric order using SQL Server Management Studio or `sqlcmd`:
+Create an empty local database named `MyGPASS_Development` and configure `ConnectionStrings:GPassDb` before starting the API. The API does not apply schema scripts or seed data.
+
+From this `backend` directory, apply the public schema scripts in this order: `001` through `007`, then `009`. There is no `008` script in this repository.
 
 ```powershell
-Get-ChildItem ../database/schema/*.sql | Sort-Object Name | ForEach-Object {
-	sqlcmd -S localhost -d MyGPASS_Development -E -b -i $_.FullName
-	if ($LASTEXITCODE -ne 0) { throw "Failed to apply $($_.Name)" }
+$scripts = @(
+    "001_initial_schema.sql",
+    "002_email_verification_and_password_reset.sql",
+    "003_booking_departure_datetime.sql",
+    "004_qr_code_expiration.sql",
+    "005_qr_codes_per_passenger.sql",
+    "006_guest_bookings.sql",
+    "007_application_settings.sql",
+    "009_unique_users_email.sql"
+)
+foreach ($name in $scripts) {
+    sqlcmd -S localhost -d MyGPASS_Development -E -b -i "../database/schema/$name"
+    if ($LASTEXITCODE -ne 0) { throw "Failed to apply $name" }
+}
 ```
 
-The API requires the `GPassDb` connection string at startup and does not migrate the database automatically. The migration contains schema only; it does not seed user or operational data.
-The API requires the `GPassDb` connection string at startup and does not apply schema scripts automatically.
-To make the booking flow selectable on a fresh database, optionally apply the synthetic example route (Demo Port A to Demo Port B, Example Shipping Line, Demo Vessel) using SQL Server Management Studio or `sqlcmd`:
+Then apply the fictional schedule seed (Demo Port A, Demo Port B, Example Shipping Line, and Demo Vessel):
 
 ```powershell
-sqlcmd -S localhost -d MyGPASS_Development -E -i ../database/seeds/schedule_seed.example.sql
+sqlcmd -S localhost -d MyGPASS_Development -E -b -i ../database/seeds/schedule_seed.example.sql
 ```
 
-This is fictional demonstration data, not a live or current sailing schedule. You can remove or replace it with routes you are authorized to use.
+That seed is demonstration data only. It is not a live sailing schedule.
 
-## Local administrator access
+## Email verification
 
-Register and verify your own local account first. The API has no first-admin bootstrap endpoint; for a local development database only, promote that account with SQL Server Management Studio:
+Registration stores `IsEmailVerified` as false. Login succeeds only after that account is verified. Forgot-password and verification messages are sent only when SMTP is configured through `EmailVerification:Smtp` in local settings, the matching environment variables, User Secrets, or the `ApplicationSettings` table. The example SMTP host, username, and password are empty, so those messages are not sent.
+
+Without SMTP, a newly registered account cannot complete normal login verification through email. For a local development database only, you may mark a demo account you created as verified:
 
 ```sql
 UPDATE dbo.Users
-SET Role = N'Admin'
-WHERE Email = N'<your-verified-local-email>';
+SET IsEmailVerified = 1
+WHERE Email = N'<your-local-demo-email>';
 ```
 
-Use a specific account you control, and never apply this bootstrap step to a shared or production database.
+Do not change application code to skip verification. Do not run that update against a shared or deployed database.
+
+## Frontend API calls
+
+Local `npm start` uses an empty API base URL. `frontend/mygpass-client/proxy.conf.json` forwards browser requests from `/api` to `http://localhost:5000`. Keep that development proxy on port 5000.
+
+The production frontend build also uses an empty `apiBaseUrl`, so the browser calls `/api` on the same origin as the hosted site. A hosted demo needs the hosting platform or a reverse proxy to forward `/api` to this API. This repository does not set a public API hostname.
 
 ## Run and test
 
+Start the API with the HTTP launch profile:
+
 ```powershell
-dotnet restore MyGPASS.Api/MyGPASS.Api.csproj
-dotnet run --project MyGPASS.Api/MyGPASS.Api.csproj
-dotnet test MyGPASS.Api.Tests/MyGPASS.Api.Tests.csproj
+dotnet run --launch-profile http --project MyGPASS.Api/MyGPASS.Api.csproj
 ```
 
-The HTTPS launch profile listens on `https://localhost:5001` and HTTP listens on `http://localhost:5000`. The frontend API example uses `https://localhost:5001`. In Development, OpenAPI is available at `https://localhost:5001/openapi/v1.json`.
+That profile listens on `http://localhost:5000`. In Development, OpenAPI is available at `http://localhost:5000/openapi/v1.json`.
+
+Run the backend tests:
+
+```powershell
+dotnet test MyGPASS.Api.Tests/MyGPASS.Api.Tests.csproj
+```

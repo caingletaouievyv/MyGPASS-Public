@@ -22,7 +22,7 @@ import { GuestBookingSessionService } from '../guest-booking-session.service';
         <div class="payment-content">
           <p class="eyebrow">Payment demo</p>
           <h1 id="payment-title">Confirm your payment</h1>
-          <p class="description">This is a visual payment placeholder for the booking flow.</p>
+          <p class="description">This is a visual payment placeholder for the Globalport booking flow.</p>
 
           <div class="amount-panel">
             <span>Total amount</span>
@@ -32,7 +32,7 @@ import { GuestBookingSessionService } from '../guest-booking-session.service';
           <div class="booking-summary">
             <div>
               <span>Route</span>
-              <strong>{{ origin || 'Selected route' }} <span aria-hidden="true">→</span> {{ destination || 'Selected trip' }}</strong>
+              <strong>{{ origin || 'Globalport' }} <span aria-hidden="true">→</span> {{ destination || 'Selected trip' }}</strong>
             </div>
             <div>
               <span>Passengers</span>

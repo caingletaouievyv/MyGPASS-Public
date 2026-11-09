@@ -23,7 +23,7 @@ npm start
 
 Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
 
-Development uses `proxy.conf.json` to forward `/api` requests to `http://localhost:5000`. The production build uses `https://localhost:5001` from `src/environments/environment.ts` as a generic local API example; update it for your own deployment before building for production. No private environment values are included.
+Development uses `proxy.conf.json` to forward `/api` requests to `http://localhost:5000`. The production build leaves `apiBaseUrl` empty in `src/environments/environment.ts`, so API calls stay on the same origin as the hosted app. No private environment values are included.
 
 ## Code scaffolding
 

@@ -16,10 +16,9 @@
   display: block;
   width: min(700px, 90vw);
   max-width: 100%;
-  color: #123b81;
-  font-size: clamp(2.5rem, 10vw, 5rem);
-  font-weight: 900;
-  text-align: center;
+  height: auto;
+  object-fit: contain;
+  object-position: center;
   opacity: 0.96;
   animation: fadeIn 0.35s ease;
 }
