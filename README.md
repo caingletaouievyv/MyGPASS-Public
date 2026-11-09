@@ -12,6 +12,33 @@ The public repository is a clean, runnable snapshot of the agreed 11-page user-f
 
 > **Demo/payment note:** Payment functionality in the public project is for demonstration/testing purposes. It does not represent a live production payment gateway or real-money transaction.
 
+## Quick Demo
+
+> **Live demo:** Coming soon
+>
+> **Repo:** [caingletaouievyv/MyGPASS-Public](https://github.com/caingletaouievyv/MyGPASS-Public)
+
+MyGPASS is a full-stack passenger booking system built with **Angular 22** and **ASP.NET Core 10**. It demonstrates a complete booking lifecycle — route selection, scheduling, payment (demo), digital QR passes, guest access, authentication, and booking history — with security hardening throughout.
+
+**What you can do in the demo:**
+- Register / log in or continue as a **guest** (no account needed)
+- Select an origin port on a schematic Philippine map
+- Choose destination, shipping line, departure day, and time
+- Enter passenger count and proceed to demo payment
+- Receive a **digital pass with QR code** per passenger
+- View booking history and account details (registered users)
+- Download QR codes
+
+**Tech highlights for recruiters:**
+- Angular 22 (standalone components, signals, responsive UI)
+- ASP.NET Core 10 Web API (.NET 10)
+- Entity Framework Core + SQL Server (Azure SQL compatible)
+- JWT authentication with role-based authorization
+- Cryptographically secure guest access tokens (SHA-256 hashed, expiration/revocation/ownership validated)
+- Security headers, CSP, CORS, rate limiting, VAPT-oriented hardening
+- 75 frontend tests + 58 backend tests passing
+- No EF migrations — versioned SQL scripts via SSMS
+
 ## Local Demo Setup
 
 This uses a separate local database and fictional schedule data. It does not call a private API, use production credentials, or take a real payment.
@@ -87,6 +114,18 @@ The route map still shows its built-in origin names. The seeded ports are not pi
 - Responsive Angular user interface
 - Backend API with authentication and authorization
 - Automated frontend and backend tests
+
+## Key Features (Recruiter Summary)
+
+- **Full booking flow:** Route → Details → Payment (demo) → Digital Pass with QR
+- **Guest booking:** No registration required; cryptographically secure guest tokens
+- **Authentication:** JWT-based login/register with email verification and password reset
+- **Account & History:** Registered users can view past bookings and manage their account
+- **Responsive UI:** Mobile-friendly across all pages
+- **Security:** JWT validation, configured CORS, rate limiting, security headers (CSP, HSTS, X-Frame-Options), production-safe error handling, dependency vulnerability scanning (0 npm vulnerabilities)
+- **Testing:** 75 frontend tests (Vitest) + 58 backend tests (.NET), production build passing
+- **Database:** SQL Server / Azure SQL with versioned migration scripts (no EF migrations)
+- **Deployment:** FileZilla-based publish with backend commit verification via `/api/version`
 
 ## Booking Flow
 
@@ -252,25 +291,23 @@ Suggested showcase areas:
 
 **Public release:** Active development / demo preparation
 
-The public repository currently focuses on the passenger-facing MyGPASS experience.
-
-### Implemented direction
-
-- User authentication and account flows
-- Route and schedule selection
-- Booking creation flow
-- Guest booking access
-- Booking history
-- Digital QR passenger passes
+### What's implemented
+- User authentication and account flows (register, login, forgot/reset password, email verification)
+- Route and schedule selection with interactive Philippine port map
+- Booking creation flow (route → details → payment → pass/QR)
+- Guest booking access (no registration, token-secured)
+- Booking history and account management
+- Digital QR passenger passes (one per passenger)
 - Payment/demo confirmation flow
-- Security hardening and automated testing
+- Security hardening (JWT, CORS, rate limiting, headers, VAPT-oriented)
+- Automated testing (75 frontend + 58 backend tests passing)
+- Local demo setup (SQL Server LocalDB, fictional seed data, one-command backend start)
 
 ### Demo / production boundaries
-
 - A live hosted demo is **not yet published**.
-- Production payment processing is **not enabled by this public project**.
-- Private infrastructure, credentials, internal URLs, and production configuration are intentionally excluded.
-- Any provider-specific integrations that are not part of the public release should be treated as unavailable in this repository.
+- Production payment processing is **not enabled** (demo payment only).
+- Private infrastructure, credentials, internal URLs, and production configuration are excluded.
+- Admin maintenance features are intentionally excluded from this public snapshot.
 
 ## Project Scope
 
