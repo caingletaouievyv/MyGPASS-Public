@@ -1,6 +1,6 @@
 # MyGPASS
 
-Full-stack passenger booking system built with **Angular 22** and **ASP.NET Core 10**. Features JWT authentication, guest booking with secure access tokens, digital QR passes, and a demo payment flow.
+Full-stack passenger booking system. Angular 22 + ASP.NET Core 10. JWT auth, guest booking, QR passes, demo payment.
 
 **Live:** [https://gpass.globalports.com.ph/login](https://gpass.globalports.com.ph/login)
 
